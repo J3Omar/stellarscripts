@@ -7,7 +7,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/book.css">
   <script defer src="js/stellar-gfx.js"></script>
+  <script defer src="js/narration-sync.js"></script>
+  <script defer src="js/book-data.js"></script>
+  <script defer src="js/book-diagrams.js"></script>
+  <script defer src="js/book.js"></script>
   <script defer src="js/archive.js"></script>
   <script defer src="support.js"></script>
 </head>
@@ -165,42 +170,7 @@
                   </sc-if>
 
                   <sc-if value="{{ isChapter }}" hint-placeholder-val="{{ false }}">
-                    <div class="chapter-illustrations" style="--ss-opacity:{{ contentOp }}">
-                      <div class="chapter-kicker"><span class="page-kicker-rule"></span>{{ ch.part }} · Chapter {{ ch.num }}<span class="page-kicker-rule"></span></div>
-                      <div class="chapter-photos">
-                        <sc-for list="{{ photos }}" as="p" hint-placeholder-count="0">
-                          <div class="chapter-photo" data-depth="{{ p.depth }}"><div class="chapter-photo-float" style="--ss-animation-duration:{{ p.fdur }}s; --ss-animation-delay:{{ p.fdel }}s">
-                              <div class="chapter-polaroid" style="--ss-box-shadow:{{ p.sh }}; --ss-photo-rotation:{{ p.rot }}deg; --ss-photo-scale:{{ p.sc }}">
-                                <canvas class="chapter-photo-canvas" ref="{{ p.ref }}" data-scene="{{ p.scene }}"></canvas>
-                                <div class="chapter-photo-corner-tl"></div>
-                                <div class="chapter-photo-corner-tr"></div>
-                                <div class="chapter-photo-corner-bl"></div>
-                                <div class="chapter-photo-corner-br"></div>
-                                <div class="chapter-photo-caption">{{ p.cap }}</div>
-                              </div></div></div>
-                        </sc-for>
-                      </div>
-                      <div class="chapter-figure-heading">
-                        <span class="chapter-figure-title">{{ ch.figTitle }}</span>
-                        <span class="chapter-figure-label" style="--ss-color:{{ figColor }}">{{ figLabel }}</span>
-                      </div>
-                      <div class="chapter-diagram" data-depth="3">
-                        <canvas class="chapter-diagram-canvas" ref="{{ cv.diag }}" data-scene="{{ ch.diag }}"></canvas>
-                      </div>
-                      <div class="chapter-playback">
-                        <button class="chapter-play-toggle" style="--ss-background:{{ playBg }}; --ss-color:{{ playColor }}" onClick="{{ togglePlay }}">{{ playIcon }}</button>
-                        <div class="chapter-steps">
-                          <sc-for list="{{ stepDots }}" as="d" hint-placeholder-count="0">
-                            <button class="chapter-step" style="--ss-background:{{ d.bg }}; --ss-color:{{ d.color }}" onClick="{{ d.go }}">{{ d.n }}</button>
-                          </sc-for>
-                        </div>
-                        <div class="chapter-seek" onClick="{{ seek }}">
-                          <div class="chapter-seek-track"><div class="chapter-seek-fill" ref="{{ fillRef }}"></div></div>
-                        </div>
-                      </div>
-                      <div class="chapter-step-text">{{ stepText }}</div>
-                      <div class="chapter-page-number">{{ ch.pageL }}</div>
-                    </div>
+                    <div class="bk-host" ref="{{ bkLeftRef }}"></div>
                   </sc-if>
                 </div>
 
@@ -234,40 +204,7 @@
                   </sc-if>
 
                   <sc-if value="{{ isChapter }}" hint-placeholder-val="{{ false }}">
-                    <div class="chapter-details" style="--ss-opacity:{{ contentOp }}">
-                      <div class="chapter-heading">
-                        <div class="chapter-titles" data-depth="2">
-                          <div class="chapter-title">{{ ch.title }}</div>
-                          <div class="chapter-subtitle">{{ ch.subtitle }}</div>
-                        </div>
-                        <div class="chapter-badge" data-depth="5">
-                          <svg class="chapter-badge-rim" viewBox="0 0 100 100" fill="none" stroke="rgba(120,70,40,.55)"><circle cx="50" cy="50" r="47" stroke-width="1.4"></circle><circle cx="50" cy="50" r="41" stroke-width=".5" stroke-dasharray="1.5 2.5"></circle><circle cx="50" cy="3" r="2.4" fill="rgba(154,90,42,.8)" stroke="none"></circle></svg>
-                          <div class="chapter-badge-text">{{ ch.code }}<br>{{ ch.year }}</div>
-                        </div>
-                      </div>
-                      <div class="chapter-data-heading"><div class="divider-left"></div>MISSION DATA<div class="divider-right"></div></div>
-                      <div class="chapter-data">
-                        <sc-for list="{{ dataRows }}" as="r" hint-placeholder-count="0">
-                          <div class="chapter-data-row" style="--ss-animation-delay:{{ r.del }}s; --ss-background:{{ r.bg }}; --ss-box-shadow:{{ r.sh }}">
-                            <span class="chapter-data-key">{{ r.k }}</span>
-                            <span class="chapter-data-value">{{ r.v }}</span>
-                          </div>
-                        </sc-for>
-                      </div>
-                      <div class="chapter-story-heading">
-                        <span class="chapter-story-label">ABOUT THE MISSION</span>
-                        <div class="divider-right"></div>
-                        <button class="chapter-story-toggle" style="--ss-background:{{ storyBg }}" onClick="{{ playStory }}"><span class="story-button-dot"></span>{{ storyLabel }}</button>
-                      </div>
-                      <p class="chapter-story">
-                        <sc-for list="{{ sentences }}" as="s" hint-placeholder-count="0"><span class="chapter-sentence" style="--ss-background:{{ s.bg }}"><sc-for list="{{ s.words }}" as="w" hint-placeholder-count="0"><span class="chapter-word" style="--ss-color:{{ w.color }}; --ss-box-shadow:{{ w.sh }}">{{ w.t }}</span></sc-for></span></sc-for>
-                      </p>
-                      <div class="chapter-footer">
-                        <span class="chapter-contents-link" onClick="{{ goContents }}">‹ CONTENTS</span>
-                        <span class="chapter-footer-number">{{ ch.pageR }}</span>
-                        <span class="chapter-next-link" onClick="{{ nextCh }}">{{ nextLabel }} ›</span>
-                      </div>
-                    </div>
+                    <div class="bk-host" ref="{{ bkRightRef }}"></div>
                   </sc-if>
                 </div>
 
@@ -364,19 +301,6 @@
             </div>
           </sc-if>
 
-          <sc-if value="{{ showStoryBar }}" hint-placeholder-val="{{ false }}">
-            <div class="story-bar">
-              <div class="story-bar-heading">
-                <div class="story-bar-label"><span class="pulse-dot-small"></span>{{ barKicker }}</div>
-                <div class="story-bar-title">{{ barTitle }}</div>
-              </div>
-              <div class="story-progress">
-                <sc-for list="{{ barSegs }}" as="g" hint-placeholder-count="0"><div class="story-progress-track"><div class="story-progress-fill" style="--ss-width:{{ g.w }}"></div></div></sc-for>
-              </div>
-              <button class="story-play" onClick="{{ playStory }}">{{ barPlayIcon }}</button>
-              <button class="story-stop" onClick="{{ stopStory }}">■</button>
-            </div>
-          </sc-if>
           <sc-if value="{{ showAskBtn }}" hint-placeholder-val="{{ false }}">
             <button class="ask-open" onClick="{{ openAsk }}">
               <span class="ask-open-dot"></span>

@@ -1,26 +1,20 @@
 window.createStellarScriptsComponent = (DCLogic, React) => {
-  const CH = [];
-  // Future book chapters must set chapterId to the matching ID in docs/README-chatbot-setup.md.
-  CH.forEach(c => {
-    c.beats = c.beats.map(beat => {
-      const ws = beat.t.split(' ');
-      let offset = 0;
-      const st = ws.map(word => {
-        const start = offset;
-        offset += word.length + 1;
-        return start;
-      });
-      return { ...beat, ws, st };
-    });
-    c.narration = c.beats.map(beat => beat.t);
+  // Book chapters come from js/book-data.js. Each chapterId must match an ID in
+  // docs/README-chatbot-setup.md (the chatbot reads CH[state.ch].chapterId and .sugg).
+  const BOOK = window.SSBook, SYNC = window.NarrationSync;
+  const CH = window.SS_BOOK.chapters.map((c, i) => {
+    const start = BOOK.chapterStart(i);
+    return { ...c, pageL: start < 0 ? '—' : String(start + 1), sub: start < 0 ? c.sub + ' · coming soon' : c.sub };
   });
+  const NO_FLIP = '(max-width: 760px), (prefers-reduced-motion: reduce)';
   const TEAL = '#3f7a76';
   const DOCK = [['00','Intro','intro'],['01','Shelf','shelf'],['02','Opening','opening'],['03','Contents','contents'],['04','Chapter','chapter'],['05','Ask','ask']];
   const CVN = ['intro','portal','painting','blueprint','upper','opp','pioneer','spol0','spol1','arm','dk0','dk1','pc0','pc1','pc2','pc3','ph0','ph1','diag'];
 
   class Component extends DCLogic {
-    state = { screen:'intro', ist:0, zoom:false, veil:false, openCap:false, bloom:false, cover:false, coverGone:false, ch:0, ask:false, flip:null, fade:false, hot:-1, entry:-1, narr:-1, story:false, spaused:false, beat:-1, word:-1, storyEnd:false, msgs:[], input:'', typing:false, askError:'', step:0, playing:true, vw:innerWidth, vh:innerHeight };
-    dustRef = React.createRef(); parRef = React.createRef(); tiltRef = React.createRef(); msgRef = React.createRef(); inputRef = React.createRef(); fillRef = React.createRef(); leftPageRef = React.createRef(); rightPageRef = React.createRef(); flipRef = React.createRef(); staticRef = React.createRef(); sp = 0;
+    state = { screen:'intro', ist:0, zoom:false, veil:false, openCap:false, bloom:false, cover:false, coverGone:false, ch:0, ask:false, flip:null, fade:false, hot:-1, entry:-1, narr:-1, sp:0, nPlaying:false, msgs:[], input:'', typing:false, askError:'', step:0, playing:true, vw:innerWidth, vh:innerHeight };
+    dustRef = React.createRef(); parRef = React.createRef(); tiltRef = React.createRef(); msgRef = React.createRef(); inputRef = React.createRef(); fillRef = React.createRef(); leftPageRef = React.createRef(); rightPageRef = React.createRef(); flipRef = React.createRef(); staticRef = React.createRef();
+    bkLeftRef = el => { this.bkL = el; this.renderSpread(); }; bkRightRef = el => { this.bkR = el; this.renderSpread(); };
     timers = []; mx = 0; my = 0; tmx = 0; tmy = 0; introT = 0; dp = 0; burst = -1; cvs = new Map(); fc = 0;
     cv = CVN.reduce((o, k) => (o[k] = el => { if (el) this.cvs.set(k, { el, ctx: el.getContext('2d'), w: 0, h: 0, vis: false }); else this.cvs.delete(k); }, o), {});
 
@@ -36,18 +30,23 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       this.onKey = e => {
         if (e.target && e.target.tagName === 'INPUT') return;
         if (e.key === 'Escape' && this.state.ask) this.closeAsk();
-        if (this.state.screen === 'chapter') { if (e.key === 'ArrowRight') this.nextCh(); if (e.key === 'ArrowLeft') this.prevCh(); if (e.key === ' ') { e.preventDefault(); this.setState(s => ({ playing:!s.playing })); } }
+        if (this.state.screen === 'chapter' && !this.state.ask) {
+          if (e.key === 'ArrowRight') this.goSpread(this.state.sp + 1);
+          if (e.key === 'ArrowLeft') this.goSpread(this.state.sp - 1);
+          if (e.key === ' ' && !/^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(e.target?.tagName || '')) { e.preventDefault(); this.togglePlay(); }
+        }
       };
       addEventListener('mousemove', this.onMove); addEventListener('resize', this.onResize); addEventListener('keydown', this.onKey);
       const loop = t => { this.raf = requestAnimationFrame(loop); try { this.frame(t); } catch (e) { if (!this._err) { this._err = 1; console.error(e); } } };
       this.raf = requestAnimationFrame(loop);
+      BOOK.load().then(() => this.renderSpread(true)).catch(e => console.error('Book data failed to load', e));
       const s = this.props.startScreen;
       if (s && s !== 'intro') this.jump(s);
     }
     componentWillUnmount() {
       this.chatRequest?.abort();
       this.chatRequest = null;
-      cancelAnimationFrame(this.raf); this.clearTimers(); this.stopNarr();
+      cancelAnimationFrame(this.raf); this.clearTimers(); this.stopNarr(); if (this.audio) { this.audio.pause(); this.audio.removeAttribute('src'); }
       removeEventListener('mousemove', this.onMove); removeEventListener('resize', this.onResize); removeEventListener('keydown', this.onKey);
     }
     componentDidUpdate() {
@@ -57,6 +56,7 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       if (this._pMsgs !== S.msgs || this._pTyping !== S.typing) { const el = this.msgRef.current; if (el) el.scrollTop = el.scrollHeight; }
       if (this._pScreen !== S.screen || this._pCh !== S.ch) { this.fc = 0; this.depthEls = null; }
       this._pMsgs = S.msgs; this._pTyping = S.typing; this._pScreen = S.screen; this._pCh = S.ch;
+      this.renderSpread();
       if (chatChapterChanged || leftChapter) {
         this.chatRequest?.abort();
         this.chatRequest = null;
@@ -75,13 +75,7 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
         const ist = it < 13.5 ? 0 : it < 14.8 ? 7 : 8;
         if (ist !== S.ist) this.setState({ ist });
       }
-      if (this.beatRun && S.story && !S.spaused && scr === 'chapter' && !this.flipping) {
-        const r = this.beatRun, el = performance.now() - r.t0, b = CH[S.ch].beats[r.i];
-        const tgt = r.done ? 1 : r.ch >= 0 ? Math.min(.98, (r.ch + 3) / r.len) : Math.min(.97, el / r.est);
-        this.sp += (tgt - this.sp) * (1 - Math.exp(-dt * 5));
-        this.dp = r.d0 + (r.d1 - r.d0) * this.sp;
-        if (b) { const ci = r.done ? r.len + 1 : r.ch >= 0 ? r.ch : this.sp * r.len; let wi = 0; for (let k = 0; k < b.st.length; k++) if (b.st[k] <= ci) wi = k; if (r.done) wi = b.st.length; if (wi !== S.word) this.setState({ word: wi }); }
-      } else if (scr === 'chapter' && CH[S.ch]?.dur && S.playing && !S.flip && !S.story) { this.dp += dt / CH[S.ch].dur; if (this.dp > 1) this.dp = 0; }
+      this.syncTick();
       if (this.fillRef.current) this.fillRef.current.style.width = (this.dp * 100).toFixed(2) + '%';
       if (this.parRef.current) this.parRef.current.style.transform = `translate3d(${(-this.mx * 14).toFixed(2)}px,${(-this.my * 9).toFixed(2)}px,0)`;
       if (this.tiltRef.current) this.tiltRef.current.style.transform = `rotateX(${(-this.my * 1.6).toFixed(3)}deg) rotateY(${(this.mx * 2.2).toFixed(3)}deg)`;
@@ -114,9 +108,19 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
         case 'arm': G.armillary(x, w, h, t); break;
         default:
           if (!sc) return;
+          if (sc.indexOf('img:') === 0) { this.drawPhoto(sc.slice(4), x, w, h); return; }
           if (sc.indexOf('d-') === 0) { const st = G.diag(sc, x, w, h, this.dp); if (st !== this.state.step) this.setState({ step:st }); }
           else G.scene(sc, x, w, h, t);
       }
+    }
+    // Cover-fit a photo into a canvas (used for the contents polaroids).
+    drawPhoto(src, x, w, h) {
+      const cache = this.imgs || (this.imgs = {});
+      let im = cache[src];
+      if (!im) { im = cache[src] = new Image(); im.decoding = 'async'; im.src = src; }
+      if (!im.complete || !im.naturalWidth) return;
+      const k = Math.max(w / im.naturalWidth, h / im.naturalHeight), dw = im.naturalWidth * k, dh = im.naturalHeight * k;
+      x.drawImage(im, (w - dw) / 2, (h - dh) / 2, dw, dh);
     }
     drawDust(t) {
       const c = this.dustRef.current; if (!c) return;
@@ -191,8 +195,9 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       if (this.flipping) return;
       if (!keep) this.stopNarr();
       const L = this.leftPageRef.current, Rp = this.rightPageRef.current, host = this.flipRef.current, st = this.staticRef.current;
-      const reset = () => { this.dp = 0; this.sp = 0; };
-      if (!L || !Rp || !host || !st || !host.clientWidth) { reset(); this.setState(Object.assign({ step:0, playing:true, entry:-1 }, apply), onDone); return; }
+      const reset = () => { this.dp = 0; };
+      // Phones and reduced-motion users get an instant page change instead of the 3D turn.
+      if (!L || !Rp || !host || !st || !host.clientWidth || matchMedia(NO_FLIP).matches) { reset(); this.setState(Object.assign({ step:0, playing:true, entry:-1 }, apply), onDone); return; }
       this.flipping = true;
       const fwd = dir === 'fwd', Wp = host.clientWidth, N = 12, w = Wp / N;
       const old = this.snap(fwd ? L : Rp); old.style.left = (fwd ? 0 : Wp) + 'px'; old.style.width = Wp + 'px'; old.style.transform = 'translateZ(.6px)'; st.appendChild(old);
@@ -227,10 +232,41 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
         requestAnimationFrame(() => { host.innerHTML = ''; st.innerHTML = ''; host.style.transform = ''; this.flipping = false; this.setState({ flip:null }); if (onDone) onDone(); }); };
       requestAnimationFrame(tick);
     }
-    openChapter(i) { if (CH[i]) this.turn('fwd', { screen:'chapter', ch:i }); }
+    openChapter(i) { const start = BOOK.chapterStart(i); if (start >= 0) this.goSpread(start); }
     goContents() { this.turn('back', { screen:'contents', ask:false }); }
-    nextCh() { const n = this.state.ch + 1; if (n < CH.length) this.turn('fwd', { ch:n }); else this.goContents(); }
-    prevCh() { const n = this.state.ch - 1; if (n >= 0) this.turn('back', { ch:n }); else this.goContents(); }
+    // Show book spread i. A manual flip inside the narrated device moves the audio to that
+    // page's start (so text, page and diagrams can never disagree); flipping to another
+    // device stops the narration. `sync` = the flip was requested by the narration clock.
+    goSpread(i, sync) {
+      const list = BOOK.spreads, S = this.state;
+      if (i < 0 || i >= list.length || this.flipping) return;
+      if (S.screen === 'chapter' && i === S.sp) return;
+      const to = list[i];
+      if (!sync && this.narr) {
+        if (this.narr.id === to.id) this.audio.currentTime = this.narr.cue.pages[to.pi].start + .01;
+        else this.stopNarr();
+      }
+      const dir = S.screen !== 'chapter' || i > S.sp ? 'fwd' : 'back';
+      this.turn(dir, { screen:'chapter', sp:i, ch:to.ci }, null, true);
+    }
+    renderSpread(force) {
+      const L = this.bkL, R = this.bkR, i = this.state.sp;
+      if (!L || !R || !L.isConnected || !R.isConnected) return;
+      if (!force && this._rL === L && this._rR === R && this._rKey === i) return;
+      this._rL = L; this._rR = R; this._rKey = i; this.syncPrev = null;
+      const box = R.closest('.open-book'); if (box) box.scrollTop = 0;
+      this.ui = BOOK.render(L, R, i, {
+        prev: () => this.goSpread(this.state.sp - 1), next: () => this.goSpread(this.state.sp + 1),
+        play: () => this.togglePlay(), replay: () => this.replay(), seek: t => this.seek(t),
+      });
+      if (this.ui) {
+        const sc = this.ui.scrub;
+        sc.addEventListener('pointerdown', () => { this.scrubbing = true; });
+        sc.addEventListener('pointerup', () => { this.scrubbing = false; });
+        sc.addEventListener('blur', () => { this.scrubbing = false; });
+      }
+      this.syncTick(true);
+    }
 
     // Ask the Archive
     openAsk() {
@@ -284,52 +320,96 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       }
     }
 
-    // Story narration
+    // Narration (audio clock drives page, text and diagrams; see js/narration-sync.js)
+    makeAudio() {
+      if (this.audio) return this.audio;
+      const a = this.audio = new Audio();
+      a.preload = 'none';
+      a.addEventListener('play', () => this.setState({ nPlaying:true }));
+      a.addEventListener('pause', () => this.setState({ nPlaying:false }));
+      a.addEventListener('ended', () => this.onNarrEnded());
+      a.addEventListener('error', () => { if (this.narr && a.getAttribute('src')) { console.error('Narration audio failed to load:', a.src); this.stopNarr(); } });
+      return a;
+    }
+    startNarr(id, t, full) {
+      const cue = BOOK.cue(id); if (!cue) return;
+      const a = this.makeAudio();
+      this.narr = { id, cue }; this.fullStory = !!full;
+      if (a.getAttribute('src') !== cue.audio) a.src = cue.audio;
+      a.currentTime = t || 0;
+      a.play().catch(e => { if (e.name !== 'AbortError') console.error(e); });
+      this.syncTick(true);
+    }
+    togglePlay() {
+      const cur = BOOK.spreads[this.state.sp], a = this.audio; if (!cur) return;
+      if (this.narr && this.narr.id === cur.id) {
+        if (a.ended) a.currentTime = this.narr.cue.pages[cur.pi].start;
+        if (a.paused) a.play().catch(() => {}); else a.pause();
+      } else this.startNarr(cur.id, BOOK.cue(cur.id).pages[cur.pi].start);
+    }
+    replay() {
+      const cur = BOOK.spreads[this.state.sp]; if (!cur) return;
+      if (this.narr && this.narr.id === cur.id) { this.audio.currentTime = 0; this.audio.play().catch(() => {}); }
+      else this.startNarr(cur.id, 0);
+    }
+    seek(t) { if (this.narr) this.audio.currentTime = Math.max(0, Math.min(t, this.narr.cue.duration)); }
+    onNarrEnded() {
+      const list = BOOK.spreads, id = this.narr?.id;
+      const next = list.find(s => s.id !== id && list.indexOf(s) > list.findIndex(x => x.id === id));
+      if (this.fullStory && next) this.startNarr(next.id, 0, true); // the sync loop turns to its first page
+      else this.syncTick(true);
+    }
+    // "Play the full story": every device in order, from the first page.
     playStory() {
-      if (!CH.length) return;
-      const S = this.state;
-      if (S.story && !S.spaused) return this.pauseStory();
-      if (S.story && S.spaused) { this.setState({ spaused:false }); return this.speakBeat(Math.max(0, S.beat)); }
-      const restart = S.storyEnd;
-      this.setState({ story:true, spaused:false, beat:-1, word:-1, ask:false, storyEnd:false });
-      if (S.screen !== 'chapter') return this.turn('fwd', { screen:'chapter', ch:0 }, () => this.speakBeat(0), true);
-      if (restart && S.ch !== 0) return this.turn('back', { ch:0 }, () => this.speakBeat(0), true);
-      this.speakBeat(0);
+      if (!BOOK.spreads.length) return;
+      this.setState({ ask:false });
+      this.startNarr(BOOK.spreads[0].id, 0, true);
     }
-    pauseStory() { this.stTok = null; clearTimeout(this.stT); try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} this.setState({ spaused:true }); }
-    pickVoice() { try { const v = speechSynthesis.getVoices(); return v.find(x => /Daniel|Google UK English Male|Arthur|Oliver/i.test(x.name)) || v.find(x => /^en[-_]GB/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null; } catch (e) { return null; } }
-    speakBeat(i) {
-      if (!this.state.story) return;
-      const b = CH[this.state.ch]?.beats[i];
-      clearTimeout(this.stT);
-      if (!b) return this.chapterDone();
-      const tok = this.stTok = {}, len = b.t.length, est = Math.max(2800, len * 62);
-      this.beatRun = { i, t0: performance.now(), est, len, ch: -1, d0: b.d[0], d1: b.d[1], done: false };
-      this.sp = 0; this.dp = b.d[0];
-      this.setState({ beat:i, word:0, spaused:false });
-      const end = () => { if (this.stTok !== tok) return; this.beatRun.done = true; clearTimeout(this.stT); this.stT = setTimeout(() => { if (this.stTok === tok) this.speakBeat(i + 1); }, 750); };
-      let spoke = false;
-      try {
-        if (this.props.voice !== false && window.speechSynthesis && window.SpeechSynthesisUtterance) {
-          speechSynthesis.cancel();
-          const u = new SpeechSynthesisUtterance(b.t); u.rate = .95; u.pitch = .95; const v = this.pickVoice(); if (v) u.voice = v;
-          u.onboundary = e => { if (this.stTok === tok && e.charIndex != null) this.beatRun.ch = e.charIndex; };
-          u.onend = end;
-          u.onerror = () => { if (this.stTok === tok) { clearTimeout(this.stT); this.stT = setTimeout(end, Math.max(0, est - (performance.now() - this.beatRun.t0))); } };
-          speechSynthesis.speak(u); spoke = true;
-          this.stT = setTimeout(end, est * 1.8 + 3000);
-        }
-      } catch (e) {}
-      if (!spoke) this.stT = setTimeout(end, est);
+    stopNarr() {
+      if (this.audio) this.audio.pause();
+      this.narr = null; this.fullStory = false; this.syncPrev = null;
+      if (this.ui) { SYNC.clear(this.ui.left); SYNC.clear(this.ui.right); }
+      this.syncTick(true);
     }
-    chapterDone() {
-      const n = this.state.ch + 1, tok = this.stTok;
-      this.stT = setTimeout(() => { if (this.stTok !== tok || !this.state.story) return;
-        if (n < CH.length) { this.beatRun = null; this.setState({ beat:-1, word:-1 }); this.turn('fwd', { ch:n }, () => this.speakBeat(0), true); }
-        else { this.stopNarr(); this.setState({ storyEnd:true }); this.later(() => this.setState({ storyEnd:false }), 6000); }
-      }, 1100);
+    // Phones: the book is one scrolling page, so keep the sentence being read in view.
+    keepSentenceVisible() {
+      const box = this.bkR && this.bkR.closest('.open-book'), el = this.ui && this.ui.right.querySelector('.bk-s.is-now');
+      if (!box || !el || box.scrollHeight <= box.clientHeight + 2) return;
+      const b = box.getBoundingClientRect(), r = el.getBoundingClientRect(), controls = 70;
+      if (r.top >= b.top + 8 && r.bottom <= b.bottom - controls) return;
+      const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      box.scrollTo({ top: box.scrollTop + r.top - b.top - 60, behavior: smooth ? 'smooth' : 'auto' });
     }
-    stopNarr() { this.stTok = null; clearTimeout(this.stT); this.beatRun = null; try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} if (this.state && (this.state.story || this.state.beat !== -1)) this.setState({ story:false, spaused:false, beat:-1, word:-1 }); }
+    // Called every animation frame. Reads audio.currentTime and derives everything else.
+    syncTick(force) {
+      const n = this.narr, ui = this.ui, S = this.state, list = BOOK.spreads;
+      if (n) {
+        const a = this.audio, st = SYNC.stateAt(n.cue, a.currentTime);
+        const target = list.findIndex(s => s.id === n.id && s.pi === st.page);
+        if (target >= 0 && (S.screen !== 'chapter' || S.sp !== target) && !this.flipping && (S.screen === 'chapter' || this.fullStory)) this.goSpread(target, true);
+        const cur = list[S.sp];
+        if (ui && S.screen === 'chapter' && cur && cur.id === n.id && cur.pi === st.page) {
+          const prev = this.syncPrev; SYNC.apply(ui.left, st, prev); SYNC.apply(ui.right, st, prev); this.syncPrev = st;
+          if (!prev || prev.sentence !== st.sentence) this.keepSentenceVisible();
+        } else if (ui && this.syncPrev) { SYNC.clear(ui.left); SYNC.clear(ui.right); this.syncPrev = null; }
+      }
+      if (!ui || !ui.right.isConnected) return;
+      const cur = list[S.sp], mine = !!(n && cur && n.id === cur.id), a = this.audio;
+      const t = mine ? a.currentTime : 0, playing = mine && !a.paused && !a.ended;
+      if (mine && !this.scrubbing && Math.abs(+ui.scrub.value - t) > .05) ui.scrub.value = t.toFixed(1);
+      const timeTxt = mine ? BOOK.fmtTime(t) + ' / ' + BOOK.fmtTime(n.cue.duration) : BOOK.fmtTime(BOOK.cue(cur.id).duration);
+      if (ui.time.textContent !== timeTxt) ui.time.textContent = timeTxt;
+      const key = (mine ? 1 : 0) + '|' + playing + '|' + (mine && a.ended);
+      if (force || ui._key !== key) {
+        ui._key = key;
+        ui.right.querySelector('.bk-controls').classList.toggle('is-active', mine);
+        ui.icon.textContent = playing ? '❚❚' : '▶';
+        ui.label.textContent = playing ? 'Pause' : mine && !a.ended ? 'Resume' : 'Narrate';
+        ui.play.setAttribute('aria-label', playing ? 'Pause narration' : 'Narrate ' + window.SS_BOOK.devices[cur.id].name);
+        ui.play.classList.toggle('is-playing', playing);
+      }
+      if (mine) ui.scrub.setAttribute('aria-valuetext', BOOK.fmtTime(t));
+    }
 
     // Template bindings
     renderVals() {
@@ -342,7 +422,6 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
           ctaOp: on ? 1 : 0, ctaT: on ? 'translateX(0)' : 'translateX(-6px)', go: () => this.openChapter(i), enter: () => this.setState({ entry:i }), leave: () => this.setState({ entry:-1 }) }; };
       const bs = scr === 'opening' ? S.bstage : null, SC = Math.max(S.vw / 1920, S.vh / 1080), BW = Math.min(.84 * S.vw, 1.26 * S.vh), BK = 380 * SC / (.676 * BW);
       const shelfT = (m, lift, ry) => { const k = BK * m, dx = 3 * SC - .25 * BW * (k - 1), dy = 152 * SC + lift * SC - .015 * S.vh; return 'translate(-50%,-50%) translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) translateX(-25%) scale(' + k.toFixed(4) + ') rotateY(' + ry + 'deg)'; };
-      const bb = S.story && S.beat >= 0 ? c?.beats[S.beat] : null;
       const askOn = S.ask && scr === 'chapter', userCount = S.msgs.filter(m => m.role === 'user').length, dockActive = askOn ? 'ask' : scr;
       return {
         cv: this.cv, dustRef: this.dustRef, parRef: this.parRef, tiltRef: this.tiltRef, msgRef: this.msgRef, inputRef: this.inputRef, fillRef: this.fillRef,
@@ -367,27 +446,13 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
         coverT: S.cover ? 'translateZ(2px) rotateY(-180deg)' : 'translateZ(2px) rotateY(0deg)',
         bloomOp: S.bloom ? 1 : 0, openCapOp: S.openCap ? 1 : 0, openCapT: S.openCap ? 'translateY(0)' : 'translateY(14px)',
         flipF: S.flip === 'fwd', flipB: S.flip === 'back', contentOp: S.fade ? 0 : 1,
-        isContents: scr === 'contents', isChapter: scr === 'chapter' && !!c,
+        isContents: scr === 'contents', isChapter: scr === 'chapter' && !!c && BOOK.spreads.length > 0,
         archiveEmpty: CH.length === 0, hasChapters: CH.length > 0,
         leftEntries: CH.slice(0, 2).map((_, i) => entry(i, ['0', '3cqw'][i])),
         rightEntries: CH.slice(2, 4).map((_, i) => entry(i + 2, ['1.5cqw', '4cqw'][i])),
         ch: c,
-        photos: c?.photos.map((p, i) => { const hl = !!(bb && bb.p === i); return { ...p, ref:this.cv['ph' + i], depth: i ? 9 : 6, fdur: i ? 8.4 : 7.2, fdel: -i * 2.3, sc: hl ? 1.08 : 1, sh: hl ? '0 0 0 2px rgba(63,122,118,.8),0 1.6cqw 2.6cqw rgba(40,22,8,.5)' : '0 .8cqw 1.6cqw rgba(60,35,15,.4)' }; }) ?? [],
-        dataRows: c?.data.map(([k, v], i) => { const hl = !!(bb && bb.r === i); return { k, v, del: .15 + i * .07, bg: hl ? 'rgba(63,122,118,.14)' : 'transparent', sh: hl ? 'inset 2px 0 0 #3f7a76' : 'none' }; }) ?? [],
-        stepText: c ? c.steps[Math.min(S.step, c.steps.length - 1)] : '',
-        stepDots: c?.steps.map((s, i) => ({ n: i + 1, bg: S.step === i ? TEAL : 'transparent', color: S.step === i ? '#f3efe4' : '#2f5f5b', go: () => { if (this.state.story) this.stopNarr(); this.dp = c.stepsAt[i] + .005; this.setState({ step:i }); } })) ?? [],
-        togglePlay: () => { if (this.state.story) this.stopNarr(); this.setState(s => ({ playing:!s.playing })); },
-        playIcon: S.playing ? '❚❚' : '▶', playBg: S.playing ? 'transparent' : TEAL, playColor: S.playing ? '#2f5f5b' : '#f3efe4',
-        seek: e => { const r = e.currentTarget.getBoundingClientRect(); this.dp = Math.max(0, Math.min(.999, (e.clientX - r.left) / r.width)); },
-        sentences: c?.beats.map((b, i) => { const cur = S.story && i === S.beat, fut = S.story && i > S.beat; return { bg: cur ? 'rgba(63,122,118,.13)' : 'transparent', words: b.ws.map((w, k) => ({ t: w + ' ', color: cur ? (k < S.word ? '#1f3533' : k === S.word ? '#2f5f5b' : '#2e2014') : fut ? 'rgba(46,32,20,.5)' : '#2e2014', sh: cur && k === S.word ? 'inset 0 -2px 0 #3f7a76' : 'none' })) }; }) ?? [],
-        playStory: () => this.playStory(), stopStory: () => { this.stopNarr(); this.setState({ storyEnd:false }); },
-        storyLabel: !S.story ? 'PLAY THE STORY' : S.spaused ? 'RESUME STORY' : 'PAUSE STORY', storyBg: S.story && !S.spaused ? '#2f5f5b' : TEAL,
-        figLabel: S.story ? 'FIG. 1 · NARRATING' : 'FIG. 1 · MOTION STUDY', figColor: S.story ? '#2f5f5b' : '#6b4e33',
-        showStoryBar: (S.story || S.storyEnd) && (scr === 'chapter' || scr === 'contents'),
-        barKicker: S.storyEnd ? 'STORY COMPLETE' : S.spaused ? 'PAUSED' : 'NOW NARRATING', barTitle: S.storyEnd ? 'The end of the archive' : c ? 'Chapter ' + c.num + ' · ' + c.title : '',
-        barPlayIcon: S.story && !S.spaused ? '❚❚' : '▶',
-        barSegs: CH.map((x, i) => ({ w: S.storyEnd || i < S.ch ? '100%' : i > S.ch || !S.story ? '0%' : (Math.min(1, (Math.max(0, S.beat) + (S.beat >= 0 ? Math.min(1, S.word / Math.max(1, c.beats[S.beat].ws.length)) : 0)) / c.beats.length) * 100).toFixed(1) + '%' })),
-        goContents: () => this.goContents(), nextCh: () => this.nextCh(), nextLabel: S.ch < CH.length - 1 ? CH[S.ch + 1].title : 'Contents',
+        playStory: () => this.playStory(), bkLeftRef: this.bkLeftRef, bkRightRef: this.bkRightRef,
+        goContents: () => this.goContents(),
         askT: askOn ? 'translateY(-50%)' : 'translateY(-50%) translateX(115%) rotate(4deg)', askOp: askOn ? 1 : 0, askPe: askOn ? 'auto' : 'none',
         openAsk: () => this.openAsk(), closeAsk: () => this.closeAsk(), showAskBtn: !!c && scr === 'chapter' && !S.ask,
         msgs: S.msgs.map(m => ({ text: m.text, isUser: m.role === 'user', isArchive: m.role !== 'user' })), typing: S.typing,
