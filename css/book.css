@@ -98,6 +98,16 @@
 .bk-svg .d-dust path { fill: rgba(150,92,48,.72); }
 .bk-svg .d-drain, .bk-svg .d-grow { transform-box: fill-box; transform-origin: left center; }
 .bk-svg .d-drain { transform: scaleX(0); }
+.bk-svg .d-rock { fill: rgba(110,80,45,.6); }
+.bk-svg .d-earth { fill: #5d8fb0; stroke: #2e2014; stroke-width: 1.2; }
+.bk-svg .d-jupiter { fill: #d9a26a; stroke: #7a4a22; stroke-width: 1.2; }
+.bk-svg .d-saturn { fill: #e7c98a; stroke: #7a5a22; stroke-width: 1.2; }
+.bk-svg .d-ring { fill: none; stroke: rgba(122,90,34,.55); stroke-width: 7; }
+.bk-svg .d-ring-front { fill: none; stroke: rgba(122,90,34,.55); stroke-width: 7; }
+.bk-svg .d-fring { fill: none; stroke: #a24b22; stroke-width: 1.8; }
+.bk-svg .d-field path { fill: none; stroke: #3f7a76; stroke-width: 1.2; stroke-dasharray: 3 4; }
+.bk-svg .d-star { fill: #e9b54a; stroke: #7a4a22; stroke-width: 1; }
+.bk-svg .d-ghost { opacity: .55; }
 .bk-svg .d-node-dot { fill: #3f7a76; stroke: #2e2014; stroke-width: 1.2; transition: fill .5s; }
 .bk-svg text { font-family: Montserrat, sans-serif; paint-order: stroke; stroke: rgba(241,230,204,.92); stroke-width: 4px; stroke-linejoin: round; }
 .bk-svg .d-label { font-size: 13px; font-weight: 600; fill: #3b2a1a; }

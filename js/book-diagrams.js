@@ -218,6 +218,90 @@ window.SS_DIAGRAMS = (() => {
         <text class="d-big" x="306" y="224" text-anchor="middle" style="font-size:32px">28.06</text>
         <text class="d-small" x="306" y="254" text-anchor="middle">miles on its odometer</text>
       </g>`),
+
+    // ---------- Pioneer 10 & 11 ----------
+    'p10-belt': () => {
+      const cx = 20, cy = 270, pt = (r, deg) => [cx + r * Math.cos(deg * Math.PI / 180), cy - r * Math.sin(deg * Math.PI / 180)];
+      const arc = r => `M${cx + r} ${cy}A${r} ${r} 0 0 0 ${cx} ${cy - r}`;
+      let rocks = '';
+      for (let i = 0; i < 170; i++) {
+        const rnd = k => ((Math.sin(i * k) * 43758.5453) % 1 + 1) % 1; // deterministic scatter in [0, 1)
+        const r = 150 + 62 * rnd(12.9898), a = 4 + 82 * rnd(78.233), [x, y] = pt(r, a); rocks += `<circle class="d-rock" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1.2 + (i % 3) * .7).toFixed(1)}"/>`; }
+      const [ex, ey] = pt(60, 38), [jx, jy] = pt(260, 52);
+      return wrap('0 0 400 280', 'Schematic: Pioneer 10 crossing the asteroid belt between the orbits of Mars and Jupiter', `
+      <circle class="d-sun" cx="${cx}" cy="${cy}" r="14"/>
+      <text class="d-small" x="${cx + 18}" y="${cy - 4}">Sun</text>
+      <path class="d-faint" d="${arc(60)}"/><path class="d-faint" d="${arc(100)}" stroke-dasharray="3 4"/><path class="d-line" d="${arc(260)}"/>
+      <text class="d-small" x="${pt(100, 8)[0] + 4}" y="${pt(100, 8)[1]}">Mars's orbit</text>
+      <text class="d-small" x="${pt(260, 74)[0] + 8}" y="${pt(260, 74)[1] + 4}">Jupiter's orbit</text>
+      <g class="d-belt">${rocks}</g>
+      <text class="d-label d-warm" x="250" y="246">asteroid belt</text>
+      <path class="d-accent-stroke d-draw" data-at="cross" pathLength="1" d="M${ex.toFixed(1)} ${ey.toFixed(1)}C120 190 150 120 ${jx.toFixed(1)} ${jy.toFixed(1)}"/>
+      <g data-at="cross"><circle class="d-accent-fill" cx="${jx.toFixed(1)}" cy="${jy.toFixed(1)}" r="5"/><text class="d-label d-accent" x="${(jx + 10).toFixed(1)}" y="${(jy - 6).toFixed(1)}">Pioneer 10</text></g>`);
+    },
+
+    'p10-delay': () => wrap('0 0 400 270', 'Diagram: a radio command to Pioneer 10 at Jupiter took up to 92 minutes to get an answer', `
+      <circle class="d-earth" cx="46" cy="150" r="20"/>
+      <text class="d-label" x="46" y="200" text-anchor="middle">Earth</text>
+      <circle class="d-line d-soft" cx="352" cy="150" r="9"/><path class="d-line" d="M352 141V120M342 120H362"/>
+      <text class="d-label" x="352" y="200" text-anchor="middle">Pioneer 10</text>
+      <path class="d-accent-stroke d-draw" data-at="delay" pathLength="1" stroke-dasharray="1" d="M70 140C150 96 250 96 340 140"/>
+      <path class="d-warm-stroke d-draw" data-at="delay" pathLength="1" d="M340 162C250 206 150 206 70 162"/>
+      <text class="d-small" x="200" y="96" text-anchor="middle">command</text>
+      <text class="d-small" x="200" y="222" text-anchor="middle">answer</text>
+      <text class="d-big" x="200" y="160" text-anchor="middle" style="font-size:40px" data-count="delay" data-to="92" data-dur="1.8" data-suffix=" min">92 min</text>
+      <text class="d-label" x="200" y="252" text-anchor="middle">up to 92 minutes for a reply</text>`),
+
+    'p10-lifetime': () => {
+      const x0 = 24, W = 352, plan = W * 21 / 372; // 21 months vs ~31 years (372 months)
+      return wrap('0 0 400 280', 'Bars to scale: designed for 21 months, worked about 31 years; now drifting toward the star Aldebaran', `
+      <text class="d-label" x="${x0}" y="36">Designed for: 21 months</text>
+      <rect class="d-warm-fill" data-at="planned" x="${x0}" y="46" width="${plan.toFixed(1)}" height="26"/>
+      <text class="d-label" x="${x0}" y="108">Last signal: about 31 years later</text>
+      <rect class="d-accent-fill d-grow" data-at="actual" x="${x0}" y="118" width="${W}" height="26"/>
+      <text class="d-small" x="${x0}" y="164" data-at="actual">7.6 billion miles from Earth, January 2003 · bars to scale</text>
+      <g data-at="aldebaran">
+        <circle class="d-line d-soft" cx="44" cy="226" r="7"/>
+        <path class="d-accent-stroke" stroke-dasharray="2 7" d="M60 226H330"/>
+        <path class="d-star" d="M352 210l4.5 11 11.5 1-8.8 7.5 2.8 11.2-10-6.2-10 6.2 2.8-11.2-8.8-7.5 11.5-1Z"/>
+        <text class="d-label d-accent" x="352" y="264" text-anchor="middle">Aldebaran</text>
+        <text class="d-small" x="196" y="214" text-anchor="middle">drifting, inert (direction only)</text>
+      </g>`);
+    },
+
+    'p11-slingshot': () => wrap('0 0 400 280', 'Schematic: Pioneer 11 swings around Jupiter, whose gravity bends and speeds up its path toward Saturn', `
+      <circle class="d-sun" cx="200" cy="172" r="11"/><text class="d-small" x="200" y="200" text-anchor="middle">Sun</text>
+      <circle class="d-jupiter" cx="330" cy="206" r="20"/><text class="d-label" x="330" y="248" text-anchor="middle">Jupiter</text>
+      <g transform="translate(92 70)"><ellipse class="d-line" rx="26" ry="7" transform="rotate(-14)"/><circle class="d-saturn" r="12"/></g>
+      <text class="d-label" x="92" y="40" text-anchor="middle">Saturn</text>
+      <path class="d-accent-stroke d-draw" data-at="jupiter" pathLength="1" d="M214 180C250 214 292 238 340 232"/>
+      <path class="d-accent-stroke d-draw" data-at="swing" pathLength="1" d="M340 232C370 222 364 184 334 178C262 160 168 110 112 80"/>
+      <g data-at="swing"><path class="d-faint" d="M258 138L300 96"/><text class="d-small" x="300" y="80" text-anchor="middle">gravity bends and</text><text class="d-small" x="300" y="94" text-anchor="middle">speeds up the path</text></g>
+      <g data-at="closer"><text class="d-label d-warm" x="24" y="244">3× closer to Jupiter</text><text class="d-small" x="24" y="262">than Pioneer 10, but faster through its radiation</text></g>`),
+
+    'p11-saturn': () => {
+      const ring = (rx, ry, cls, at) => `<ellipse class="${cls}"${at ? ` data-at="${at}"` : ''} cx="200" cy="140" rx="${rx}" ry="${ry}" transform="rotate(-12 200 140)"/>`;
+      return wrap('0 0 400 280', 'Schematic: Saturn with the newly found F ring, a new moon about 124 miles across, and its magnetic field', `
+      <g data-at="magnetic" class="d-field">
+        <path d="M200 92C120 20 40 120 200 188"/><path d="M200 92C280 20 360 120 200 188"/>
+        <path d="M200 98C150 50 96 120 200 182"/><path d="M200 98C250 50 304 120 200 182"/>
+      </g>
+      ${ring(118, 30, 'd-ring')}${ring(100, 24, 'd-ring')}
+      ${ring(136, 35, 'd-fring', 'fring')}
+      <circle class="d-saturn" cx="200" cy="140" r="44"/>
+      <path class="d-ring-front" d="M88 165A118 30 -12 0 0 318 116" transform="rotate(0)"/>
+      <g data-at="fring"><path class="d-faint" d="M318 104L352 64"/><text class="d-label d-warm" x="352" y="56" text-anchor="middle">F ring (new)</text></g>
+      <g data-at="moon"><circle class="d-accent-fill" cx="74" cy="80" r="6"/><text class="d-label d-accent" x="74" y="54" text-anchor="middle">new moon</text><text class="d-small" x="74" y="68" text-anchor="middle">~124 mi across</text></g>
+      <g data-at="magnetic"><text class="d-label" x="200" y="252" text-anchor="middle">first proof of a magnetic field</text></g>`);
+    },
+
+    'p11-opposite': () => wrap('0 0 400 280', 'Schematic: Pioneer 10 heading toward Aldebaran and Pioneer 11 heading the opposite way, toward Lambda Aquilae', `
+      <circle class="d-sun" cx="200" cy="140" r="12"/><text class="d-small" x="200" y="172" text-anchor="middle">Sun</text>
+      <path class="d-faint" stroke-dasharray="3 6" d="M186 140H40"/><path class="d-faint" d="M48 133l-10 7 10 7"/>
+      <text class="d-small" x="40" y="118">Pioneer 10</text><text class="d-small" x="40" y="104">toward Aldebaran</text>
+      <g data-at="opposite"><path class="d-accent-stroke" stroke-dasharray="3 6" d="M214 140H360"/><path class="d-accent-stroke" d="M352 133l10 7-10 7"/></g>
+      <g data-at="lambda"><text class="d-label d-accent" x="360" y="104" text-anchor="end">Pioneer 11 → Lambda Aquilae</text><text class="d-small" x="360" y="120" text-anchor="end">about four million years away</text></g>
+      <g data-at="ghost" class="d-ghost"><circle class="d-line d-soft" cx="316" cy="196" r="8"/><path class="d-line" d="M316 188V170M306 170H326"/><text class="d-small" x="316" y="236" text-anchor="middle" font-style="italic">"a ghost ship in our galaxy"</text></g>`),
   };
 
   return { render: id => (D[id] ? D[id]() : ''), has: id => !!D[id] };
