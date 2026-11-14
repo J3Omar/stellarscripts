@@ -1,5 +1,6 @@
 window.createStellarScriptsComponent = (DCLogic, React) => {
   const CH = [];
+  // Future book chapters must set chapterId to the matching ID in docs/README-chatbot-setup.md.
   CH.forEach(c => {
     c.beats = c.beats.map(beat => {
       const ws = beat.t.split(' ');
@@ -44,14 +45,23 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       if (s && s !== 'intro') this.jump(s);
     }
     componentWillUnmount() {
+      this.chatRequest?.abort();
+      this.chatRequest = null;
       cancelAnimationFrame(this.raf); this.clearTimers(); this.stopNarr();
       removeEventListener('mousemove', this.onMove); removeEventListener('resize', this.onResize); removeEventListener('keydown', this.onKey);
     }
     componentDidUpdate() {
       const S = this.state;
+      const chatChapterChanged = this._pCh !== undefined && this._pCh !== S.ch;
+      const leftChapter = this._pScreen === 'chapter' && S.screen !== 'chapter';
       if (this._pMsgs !== S.msgs || this._pTyping !== S.typing) { const el = this.msgRef.current; if (el) el.scrollTop = el.scrollHeight; }
       if (this._pScreen !== S.screen || this._pCh !== S.ch) { this.fc = 0; this.depthEls = null; }
       this._pMsgs = S.msgs; this._pTyping = S.typing; this._pScreen = S.screen; this._pCh = S.ch;
+      if (chatChapterChanged || leftChapter) {
+        this.chatRequest?.abort();
+        this.chatRequest = null;
+        this.setState({ msgs:[], input:'', typing:false, askError:'' });
+      }
     }
     // Canvas rendering
     mote(init) { return { x:Math.random(), y:init ? Math.random() : 1.04, vx:(Math.random() - .5) * .00012, vy:-(.00004 + Math.random() * .00014), r:.5 + Math.random() * 1.8, ph:Math.random() * 6.28, a:.25 + Math.random() * .6 }; }
@@ -233,24 +243,44 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
     async send(text) {
       const q = (text ?? this.state.input).trim();
       const c = CH[this.state.ch];
-      if (!c || !q || this.state.typing) return;
-      if (this.props.liveAnswers === false || typeof window.claude?.complete !== 'function') {
+      if (!c || !q || this.state.typing || this.chatRequest) return;
+      if (this.props.liveAnswers === false) {
         this.setState({ askError:'The Archive is unavailable right now.' });
         return;
       }
+      const chapterId = c.chapterId;
+      if (!chapterId) {
+        this.setState({ askError:'The Archive has no fact sheet connected to this chapter yet.' });
+        return;
+      }
 
+      const request = new AbortController();
+      this.chatRequest = request;
       const msgs = [...this.state.msgs, { role:'user', text:q }];
       this.setState({ msgs, input:'', typing:true, askError:'' });
       try {
-        const system = `You are "the Archive", an archivist in the Stellar Scripts interactive storybook. Answer using the supplied chapter material. If the material does not answer the question, say so. Keep your answer short and use plain prose. Chapter: ${c.title}. Facts: ${c.data.map(r => r.join(': ')).join('; ')}. Narration: ${c.narration.join(' ')}`;
-        const answer = await window.claude.complete({ system, max_tokens:320, messages: msgs.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })) });
-        const reply = typeof answer === 'string' ? answer.trim() : '';
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chapterId, question:q }),
+          signal: AbortSignal.any([request.signal, AbortSignal.timeout(35000)]),
+        });
+        const result = await response.json();
+        if (this.chatRequest !== request) return;
+        if (!response.ok) {
+          this.setState({ askError:result.error || 'The Archive is unavailable right now.' });
+          return;
+        }
+        const reply = typeof result.answer === 'string' ? result.answer.trim() : '';
         if (reply) this.setState({ msgs:[...msgs, { role:'archive', text:reply }] });
         else this.setState({ askError:'The Archive did not return an answer.' });
       } catch (e) {
-        this.setState({ askError:'The Archive is unavailable right now.' });
+        if (this.chatRequest === request) this.setState({ askError:'The Archive is unavailable right now. Please try again.' });
       } finally {
-        this.setState({ typing:false });
+        if (this.chatRequest === request) {
+          this.chatRequest = null;
+          this.setState({ typing:false });
+        }
       }
     }
 
