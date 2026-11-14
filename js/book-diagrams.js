@@ -140,6 +140,84 @@ window.SS_DIAGRAMS = (() => {
         <text class="d-small" x="${x + 160}" y="${Y(4) + 56}">commands sent</text>
       </g>`);
     },
+
+    // ---------- Opportunity ----------
+    'opp-marathon': () => {
+      const cx = 200, cy = 136, r = 92;
+      return wrap('0 0 400 280', 'Diagram: a distance ring filling up to one marathon, 26.2 miles, which Opportunity passed in March 2015', `
+      <circle class="d-track" cx="${cx}" cy="${cy}" r="${r}"/>
+      <path class="d-accent-stroke d-gauge d-draw" data-at="marathon" pathLength="1" d="M${cx} ${cy - r}A${r} ${r} 0 1 1 ${cx - .1} ${cy - r}"/>
+      <text class="d-big" x="${cx}" y="${cy + 6}" text-anchor="middle">26.2</text>
+      <text class="d-label" x="${cx}" y="${cy + 28}" text-anchor="middle">miles: one marathon</text>
+      <g data-at="finish">
+        <path class="d-line" d="M${cx} ${cy - r - 14}V${cy - r - 52}"/>
+        <g transform="translate(${cx} ${cy - r - 52})">${[0, 1, 2, 3].map(i => [0, 1].map(j => `<rect x="${i * 8}" y="${j * 8}" width="8" height="8" class="${(i + j) % 2 ? 'd-soft-fill' : 'd-ink-fill'}"/>`).join('')).join('')}</g>
+        <text class="d-label d-warm" x="${cx + 44}" y="${cy - r - 34}">March 2015</text>
+      </g>
+      <text class="d-small" x="${cx}" y="${cy + r + 34}" text-anchor="middle">first marathon distance travelled on another world</text>`);
+    },
+
+    'opp-distance': () => {
+      const x0 = 30, W = 340, planned = W * 0.625 / 28.06; // 1,100 yd = 0.625 mi; 28.06 mi driven (fact sheet)
+      return wrap('0 0 400 270', 'Bar chart to scale: planned driving about 1,100 yards (0.6 miles) versus 28 miles actually driven', `
+      <text class="d-label" x="${x0}" y="56">Planned: about 1,100 yd (≈ 0.6 mi)</text>
+      <rect class="d-warm-fill" data-at="planned" x="${x0}" y="68" width="${planned.toFixed(1)}" height="30"/>
+      <path class="d-faint" d="M${x0} 64V102"/>
+      <text class="d-label" x="${x0}" y="150">Actually drove: 28+ mi</text>
+      <rect class="d-accent-fill d-grow" data-at="actual" x="${x0}" y="162" width="${W}" height="30"/>
+      <text class="d-small" x="${x0}" y="236">bars drawn to scale</text>`);
+    },
+
+    'opp-hematite': () => wrap('0 0 400 270', 'Diagram: water helps form hematite, the mineral in the round grains nicknamed blueberries', `
+      <g data-at="water">
+        ${[[60, 90], [100, 70], [92, 130]].map(([x, y]) => `<path class="d-accent-stroke d-soft" d="M${x} ${y - 26}C${x + 18} ${y - 4} ${x + 14} ${y + 16} ${x} ${y + 16}C${x - 14} ${y + 16} ${x - 18} ${y - 4} ${x} ${y - 26}Z"/>`).join('')}
+        <text class="d-label d-accent" x="84" y="190" text-anchor="middle">water</text>
+        <path class="d-line" d="M150 100H220M210 92l10 8-10 8"/>
+        <text class="d-small" x="185" y="84" text-anchor="middle">usually forms in</text>
+      </g>
+      <g data-at="hematite">
+        ${[[270, 90, 13], [300, 76, 10], [318, 104, 14], [288, 118, 11], [344, 84, 9], [340, 128, 10], [262, 132, 8]].map(([x, y, r]) => `<circle class="d-line d-warm-stroke d-soft" cx="${x}" cy="${y}" r="${r}"/>`).join('')}
+        <text class="d-label d-warm" x="304" y="190" text-anchor="middle">hematite grains</text>
+        <text class="d-small" x="304" y="208" text-anchor="middle">("blueberries")</text>
+      </g>`),
+
+    'opp-endeavour': () => wrap('0 0 400 270', 'Schematic: clay minerals on the rim of Endeavour Crater formed in neutral water, between acidic and alkaline', `
+      <path class="d-soil" d="M10 150C80 150 110 92 150 88C190 84 200 150 260 172C320 192 360 178 390 176V250H10Z"/>
+      <path class="d-line d-draw" data-at="endeavour" pathLength="1" d="M10 150C80 150 110 92 150 88C190 84 200 150 260 172C320 192 360 178 390 176"/>
+      <text class="d-small" x="150" y="76" text-anchor="middle" data-at="endeavour">crater rim</text>
+      <text class="d-small" x="320" y="208" text-anchor="middle" data-at="endeavour">inside the crater</text>
+      <g data-at="neutral">
+        <path class="d-warm-fill" d="M178 104l8 8-8 8-8-8Z"/>
+        <path class="d-faint" d="M186 112L240 60"/>
+        <text class="d-label d-warm" x="244" y="52">clay minerals</text>
+        <rect class="d-track-rect" x="60" y="222" width="280" height="10"/>
+        <path class="d-ink-stroke" d="M200 214V240"/>
+        <text class="d-small" x="60" y="256">acidic</text>
+        <text class="d-label d-accent" x="200" y="210" text-anchor="middle">neutral</text>
+        <text class="d-small" x="340" y="256" text-anchor="end">alkaline</text>
+      </g>`),
+
+    'opp-storm': () => wrap('0 0 400 280', 'Diagram: a planet-wide dust storm blocks sunlight, Opportunity\'s solar power falls to zero, NASA calls more than 1,000 times; final odometer 28.06 miles', `
+      <circle class="d-sun" cx="80" cy="70" r="26"/>
+      ${Array.from({ length: 8 }, (_, i) => { const a = i * Math.PI / 4; return `<path class="d-sun-ray" d="M${(80 + 34 * Math.cos(a)).toFixed(1)} ${(70 + 34 * Math.sin(a)).toFixed(1)}L${(80 + 44 * Math.cos(a)).toFixed(1)} ${(70 + 44 * Math.sin(a)).toFixed(1)}"/>`; }).join('')}
+      <g data-at="storm" class="d-dust">
+        <path d="M10 50C60 30 110 70 160 48S260 40 300 56V120C240 104 180 134 120 112S40 100 10 118Z"/>
+        <path d="M10 84C70 70 120 104 180 86S270 82 310 96V140C250 128 190 150 130 136S50 128 10 140Z" opacity=".7"/>
+        <text class="d-label d-warm" x="230" y="34">dust storm, June 2018</text>
+      </g>
+      <text class="d-label" x="30" y="178">solar power</text>
+      <rect class="d-track-rect" x="30" y="188" width="150" height="16"/>
+      <rect class="d-accent-fill d-drain" data-at="storm" x="30" y="188" width="150" height="16"/>
+      <text class="d-small d-warm" x="186" y="201" data-at="storm">fell to zero</text>
+      <g data-at="calls">
+        <text class="d-big d-warm" x="30" y="252" style="font-size:34px" data-count="calls" data-to="1000" data-dur="1.6" data-fmt="comma" data-suffix="+">1,000+</text>
+        <text class="d-small" x="30" y="270">times NASA tried to reach it</text>
+      </g>
+      <g data-at="odometer">
+        <rect class="d-line d-soft" x="236" y="186" width="140" height="48" rx="4"/>
+        <text class="d-big" x="306" y="224" text-anchor="middle" style="font-size:32px">28.06</text>
+        <text class="d-small" x="306" y="254" text-anchor="middle">miles on its odometer</text>
+      </g>`),
   };
 
   return { render: id => (D[id] ? D[id]() : ''), has: id => !!D[id] };

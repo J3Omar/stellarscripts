@@ -91,6 +91,13 @@
 .bk-svg .d-soil { fill: rgba(150,100,55,.16); }
 .bk-svg .d-trench { fill: #f1e4c6; stroke: #3b2a1a; stroke-width: 1.2; }
 .bk-svg .d-silica { fill: #fffaf0; stroke: #2f8f87; stroke-width: 1.6; }
+.bk-svg .d-soft-fill { fill: #f6ecd4; }
+.bk-svg .d-track-rect { fill: rgba(59,42,26,.13); }
+.bk-svg .d-sun { fill: #e9b54a; stroke: #a24b22; stroke-width: 1.5; }
+.bk-svg .d-sun-ray { stroke: #e9b54a; stroke-width: 3; stroke-linecap: round; }
+.bk-svg .d-dust path { fill: rgba(150,92,48,.72); }
+.bk-svg .d-drain, .bk-svg .d-grow { transform-box: fill-box; transform-origin: left center; }
+.bk-svg .d-drain { transform: scaleX(0); }
 .bk-svg .d-node-dot { fill: #3f7a76; stroke: #2e2014; stroke-width: 1.2; transition: fill .5s; }
 .bk-svg text { font-family: Montserrat, sans-serif; paint-order: stroke; stroke: rgba(241,230,204,.92); stroke-width: 4px; stroke-linejoin: round; }
 .bk-svg .d-label { font-size: 13px; font-weight: 600; fill: #3b2a1a; }
@@ -112,6 +119,8 @@
 .bk-svg .d-needle { transform-box: view-box; transform-origin: 200px 196px; transform: rotate(167.4deg); }
 .bk-host.is-live .d-needle:not(.is-on) { opacity: 1; transform: rotate(108deg); }
 .bk-host.is-live .d-devil:not(.is-on) { transform: translateX(30px); }
+.bk-host.is-live .d-drain:not(.is-on) { opacity: 1; transform: scaleX(1); }
+.bk-host.is-live .d-grow:not(.is-on) { opacity: 1; transform: scaleX(0); }
 
 /* ---- Phones: no 3D page turn. Contents keeps two stacked halves; a book spread
    becomes one scrolling page (visual full width, then text) with sticky controls. ---- */
