@@ -46,7 +46,7 @@ window.SS_BOOK = {
         { headline: 'Built for 90 days, cleaned by the wind',
           stat: { value: '25×', label: 'longer than its 90-Martian-day plan' },
           diagram: 'spirit-power', photo: { file: 'PIA04187_spirit-dust-devils.jpg' },
-          caption: 'Dust devils (small whirlwinds of dust) blew dust off the solar panels. Power rose from 60% to 93%.' },
+          caption: 'Photo: the ground around the rover seen from above, stitched from its own camera images (its deck is at the centre). Inset: dust devils, small whirlwinds of dust, cleaned the solar panels and power rose from 60% to 93%.' },
         { headline: 'Bright soil under a dead wheel',
           stat: { value: 'Nearly pure silica', label: 'the main ingredient of window glass' },
           diagram: 'spirit-silica', schematic: true,
