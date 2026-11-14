@@ -36,18 +36,27 @@ window.SSBook = (() => {
     return `<span class="bk-s" data-si="${si}">${words}</span>`;
   }
 
+  // Media element for a credits entry (photo or muted looping video).
+  function mediaHtml(c, cls) {
+    const src = `assets/photos/${c.file}`;
+    return /\.mp4$/.test(c.file)
+      ? `<video class="${cls}" src="${src}" muted loop playsinline autoplay preload="none" aria-label="${esc(c.shows)}"></video>`
+      : `<img class="${cls}" src="${src}" alt="${esc(c.shows)}" loading="lazy" decoding="async" width="${c.w}" height="${c.h}">`;
+  }
+
   function visualHtml(dev, page, ch) {
     const photo = page.photo && photoOk(page.photo.file) ? credits[page.photo.file] : null;
     const diagram = window.SS_DIAGRAMS.render(page.diagram);
     let figure, credit;
     if (photo) {
-      const isVideo = /\.mp4$/.test(photo.file);
-      const media = isVideo
-        ? `<video class="bk-photo" src="assets/photos/${photo.file}" muted loop playsinline autoplay preload="metadata" aria-label="${esc(photo.shows)}"></video>`
-        : `<img class="bk-photo" src="assets/photos/${photo.file}" alt="${esc(photo.shows)}" loading="lazy" decoding="async">`;
-      figure = `<div class="bk-photo-frame${page.photo.at ? '' : ' bk-kb'}"${page.photo.at ? ` data-at="${page.photo.at}"` : ''}>${media}</div>` +
-        (diagram ? `<div class="bk-inset">${diagram}</div>` : '');
-      credit = `${photo.label ? esc(photo.label) + ' · ' : ''}Credit: ${esc(photo.credit)}`;
+      const P = page.photo, hot = P.hotspots || [];
+      // The box has the photo's exact aspect ratio, so hotspot percentages land on the right spot.
+      const spots = hot.map(h => `<span class="bk-hot bk-hot-${h.side || 'right'}" data-at="${h.at}" style="left:${h.x}%;top:${h.y}%"><span class="bk-hot-ring"></span><span class="bk-hot-label">${esc(h.label)}</span></span>`).join('');
+      figure = `<div class="bk-photo-frame"><div class="bk-photo-box${hot.length ? '' : ' bk-kb'}" style="--r:${photo.w}/${photo.h}"${P.at ? ` data-at="${P.at}"` : ''}>${mediaHtml(photo, 'bk-photo')}${spots}${P.label ? `<span class="bk-photo-tag">${esc(P.label)}</span>` : ''}</div></div>`;
+      const inset = page.inset && photoOk(page.inset) ? credits[page.inset] : null;
+      if (inset) figure += `<div class="bk-inset bk-inset-media">${mediaHtml(inset, 'bk-inset-video')}</div>`;
+      else if (diagram) figure += `<div class="bk-inset">${diagram}</div>`;
+      credit = [P.label, `Credit: ${photo.credit}`, inset && `Video: ${inset.credit}`, diagram && !inset && `Inset diagram: Stellar Scripts${page.schematic ? ' (schematic, not to scale)' : ''}`].filter(Boolean).map(esc).join(' · ');
     } else {
       figure = `<div class="bk-diagram">${diagram}</div>`;
       credit = `Diagram: Stellar Scripts${page.schematic ? ' · Schematic, not to scale' : ''}`;
@@ -65,8 +74,10 @@ window.SSBook = (() => {
     const body = [], legacy = [];
     cue.sentences.forEach((s, si) => { if (s.page === pageId) (s.id === legacyId ? legacy : body).push(sentenceHtml(s, si)); });
     const last = sp.pi === sp.n - 1;
+    const words = cue.sentences.filter(s => s.page === pageId).reduce((n, s) => n + s.words.length, 0);
+    const twin = page.twin && B.devices[page.twin] ? `<button type="button" class="bk-twin" data-twin="${page.twin}">Twin: ${esc(B.devices[page.twin].name)} →</button>` : '';
     const sources = last ? `<div class="bk-sources"><span>Sources:</span> ${dev.sources.map(([label, url]) => `<a href="${url}" target="_blank" rel="noopener">${esc(label)}</a>`).join(' · ')} · <a href="credits.html" target="_blank" rel="noopener">Image credits</a></div>` : '';
-    return `<div class="bk bk-text">
+    return `<div class="bk bk-text${words > 62 ? ' is-long' : ''}">
       <div class="bk-kicker"><span>${esc(dev.name)} · ${esc(dev.world)}</span><span class="bk-pageno">${sp.pi + 1} / ${sp.n}</span></div>
       <h2 class="bk-headline">${esc(page.headline)}</h2>
       <div class="bk-stat"><span class="bk-stat-value">${esc(page.stat.value)}</span><span class="bk-stat-label">${esc(page.stat.label)}</span></div>
@@ -74,6 +85,7 @@ window.SSBook = (() => {
       ${legacy.length ? `<p class="bk-legacy">${legacy.join(' ')}</p>` : ''}
       ${page.note ? `<p class="bk-note">${esc(page.note)}</p>` : ''}
       ${sources}
+      ${twin}
       <div class="bk-controls" role="group" aria-label="Narration controls">
         <button type="button" class="bk-btn bk-prev" aria-label="Previous page">‹</button>
         <button type="button" class="bk-btn bk-play" aria-label="Narrate ${esc(dev.name)}"><span class="bk-play-icon" aria-hidden="true">▶</span><span class="bk-play-label">Narrate</span></button>
@@ -97,8 +109,9 @@ window.SSBook = (() => {
     ui.prev.addEventListener('click', on.prev); ui.next.addEventListener('click', on.next);
     ui.play.addEventListener('click', on.play); ui.replay.addEventListener('click', on.replay);
     ui.scrub.addEventListener('input', () => on.seek(+ui.scrub.value));
+    const tw = q('.bk-twin'); if (tw) tw.addEventListener('click', () => on.device(tw.dataset.twin));
     return ui;
   }
 
-  return { load, spreads, render, cue: id => cues[id], fmtTime, chapterStart: ci => spreads.findIndex(s => s.ci === ci) };
+  return { load, spreads, render, cue: id => cues[id], fmtTime, chapterStart: ci => spreads.findIndex(s => s.ci === ci), deviceStart: id => spreads.findIndex(s => s.id === id) };
 })();

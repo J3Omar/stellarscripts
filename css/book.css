@@ -14,11 +14,27 @@
 .bk-figure { flex: 1; min-height: 0; margin: 0; position: relative; }
 .bk-diagram, .bk-photo-frame { position: absolute; inset: 0; display: grid; place-items: center; }
 .bk-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.bk-photo-frame { overflow: hidden; background: #1b140d; box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.4) rgba(60,35,15,.35); border: calc(var(--u) * .45) solid #f3e8d2; }
-.bk-photo { width: 100%; height: 100%; object-fit: contain; display: block; }
+.bk-photo-frame { container-type: size; }
+/* Fit the photo inside the frame at its own aspect ratio (like object-fit: contain), so overlays line up. */
+.bk-photo-box { position: relative; aspect-ratio: var(--r); width: min(100cqw, calc(100cqh * (var(--r)))); overflow: hidden; background: #1b140d; outline: calc(var(--u) * .45) solid #f3e8d2; box-shadow: 0 calc(var(--u) * .6) calc(var(--u) * 1.6) rgba(60,35,15,.45); }
+.bk-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
 .bk-kb .bk-photo { animation: bkKenBurns 16s ease-out both; }
+.bk-photo-tag { position: absolute; left: 8px; top: 8px; padding: 3px 7px; background: rgba(20,14,8,.78); color: #f3e8d2; font: 600 max(9px, calc(var(--u) * .7))/1.2 Montserrat, sans-serif; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; }
+/* Hotspots on photos: a ring plus a label, revealed on their narration word */
+.bk-hot { position: absolute; width: 0; height: 0; }
+.bk-hot-ring { position: absolute; left: -15px; top: -15px; width: 30px; height: 30px; border: 2.5px solid #f3c66a; border-radius: 50%; box-shadow: 0 0 0 2px rgba(20,14,8,.55), 0 0 14px rgba(243,198,106,.7); }
+.bk-hot-label { position: absolute; top: -11px; white-space: nowrap; padding: 3px 8px; background: rgba(20,14,8,.85); color: #fbe9c0; font: 600 max(10px, calc(var(--u) * .8))/1.3 Montserrat, sans-serif; border-radius: 2px; }
+.bk-hot-right .bk-hot-label { left: 22px; }
+.bk-hot-left .bk-hot-label { right: 22px; }
+.bk-inset-media { width: 40%; aspect-ratio: auto; padding: calc(var(--u) * .4); }
+.bk-inset-video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #1b140d; }
+.bk-twin { align-self: flex-start; padding: .55em 1em; background: transparent; border: 1px solid var(--teal); color: var(--teal); border-radius: 3px; font: 600 max(11px, calc(var(--u) * .85))/1 Montserrat, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.bk-twin:hover { background: rgba(63,122,118,.12); }
+.bk-twin:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.bk-text.is-long .bk-body { font-size: max(15px, calc(var(--u) * 1.8)); }
+.bk-text.is-long .bk-legacy { font-size: max(17px, calc(var(--u) * 2)); }
 @keyframes bkKenBurns { from { transform: scale(1.07); } to { transform: scale(1); } }
-.bk-inset { position: absolute; right: calc(var(--u) * -.6); bottom: calc(var(--u) * -.6); width: 46%; background: rgba(243,232,210,.94); border: 1px solid rgba(110,80,45,.4); padding: calc(var(--u) * .6); box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(60,35,15,.3); }
+.bk-inset { position: absolute; right: calc(var(--u) * -.6); bottom: calc(var(--u) * -.6); width: 46%; aspect-ratio: 400 / 270; background: rgba(243,232,210,.94); border: 1px solid rgba(110,80,45,.4); padding: calc(var(--u) * .6); box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(60,35,15,.3); }
 .bk-caption { font: italic 400 max(13px, calc(var(--u) * 1.4))/1.4 'EB Garamond', Georgia, serif; color: #4a3420; }
 .bk-credit { display: block; margin-top: .35em; font: 500 max(10px, calc(var(--u) * .74))/1.3 Montserrat, sans-serif; font-style: normal; letter-spacing: .06em; color: #6b4e33; }
 

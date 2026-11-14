@@ -258,6 +258,7 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       this.ui = BOOK.render(L, R, i, {
         prev: () => this.goSpread(this.state.sp - 1), next: () => this.goSpread(this.state.sp + 1),
         play: () => this.togglePlay(), replay: () => this.replay(), seek: t => this.seek(t),
+        device: id => this.goSpread(BOOK.deviceStart(id)),
       });
       if (this.ui) {
         const sc = this.ui.scrub;
