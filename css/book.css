@@ -26,6 +26,8 @@
 .bk-hot-label { position: absolute; top: -11px; white-space: nowrap; padding: 3px 8px; background: rgba(20,14,8,.85); color: #fbe9c0; font: 600 max(10px, calc(var(--u) * .8))/1.3 Montserrat, sans-serif; border-radius: 2px; }
 .bk-hot-right .bk-hot-label { left: 22px; }
 .bk-hot-left .bk-hot-label { right: 22px; }
+.bk-inset .bk-svg .d-label { font-size: 17px; }
+.bk-inset .bk-svg .d-small { font-size: 15px; }
 .bk-inset-media { width: 40%; aspect-ratio: auto; padding: calc(var(--u) * .4); }
 .bk-inset-video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #1b140d; }
 .bk-twin { align-self: flex-start; padding: .55em 1em; background: transparent; border: 1px solid var(--teal); color: var(--teal); border-radius: 3px; font: 600 max(11px, calc(var(--u) * .85))/1 Montserrat, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
@@ -34,7 +36,7 @@
 .bk-text.is-long .bk-body { font-size: max(15px, calc(var(--u) * 1.8)); }
 .bk-text.is-long .bk-legacy { font-size: max(17px, calc(var(--u) * 2)); }
 @keyframes bkKenBurns { from { transform: scale(1.07); } to { transform: scale(1); } }
-.bk-inset { position: absolute; right: calc(var(--u) * -.6); bottom: calc(var(--u) * -.6); width: 46%; aspect-ratio: 400 / 270; background: rgba(243,232,210,.94); border: 1px solid rgba(110,80,45,.4); padding: calc(var(--u) * .6); box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(60,35,15,.3); }
+.bk-inset { position: absolute; right: calc(var(--u) * -.6); bottom: calc(var(--u) * -.6); width: 55%; aspect-ratio: 400 / 270; background: rgba(243,232,210,.94); border: 1px solid rgba(110,80,45,.4); padding: calc(var(--u) * .6); box-shadow: 0 calc(var(--u) * .4) calc(var(--u) * 1) rgba(60,35,15,.3); }
 .bk-caption { font: italic 400 max(13px, calc(var(--u) * 1.4))/1.4 'EB Garamond', Georgia, serif; color: #4a3420; }
 .bk-credit { display: block; margin-top: .35em; font: 500 max(10px, calc(var(--u) * .74))/1.3 Montserrat, sans-serif; font-style: normal; letter-spacing: .06em; color: #6b4e33; }
 
@@ -120,18 +122,27 @@
   .book-left-page { width: 100%; height: 47%; border-radius: .4cqw .4cqw 0 0; }
   .book-right-page { left: 0; top: 47%; width: 100%; height: 53%; border-radius: 0 0 .4cqw .4cqw; }
 
-  .open-book:has(.bk-host) { overflow-y: auto; overscroll-behavior: contain; border-radius: .6cqw; background: url(../assets/paper.jpg) center/cover; }
-  .open-book:has(.bk-host) .open-book-tilt { position: relative; inset: auto; transform: none !important; }
+  /* The inner tilt layer scrolls; the transformed .open-book frame does not, so the controls
+     (position: fixed, which resolves against that frame) stay pinned to its bottom edge. */
+  .open-book:has(.bk-host) { overflow: hidden; border-radius: .6cqw; background: url(../assets/paper.jpg) center/cover; }
+  .open-book:has(.bk-host) .open-book-tilt { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; transform: none !important; transform-style: flat; }
   .open-book:has(.bk-host) .book-left-cover, .open-book:has(.bk-host) .book-turn-static, .open-book:has(.bk-host) .book-turn-overlay { display: none; }
   .open-book:has(.bk-host) .book-left-page, .open-book:has(.bk-host) .book-right-page { position: relative; left: auto; top: auto; width: 100%; height: auto; overflow: visible; box-shadow: none; border-radius: 0; }
   .open-book:has(.bk-host) .book-left-page { padding-bottom: 4px; border-bottom: 1px dashed rgba(110,80,45,.35); }
   .bk-host { position: relative; inset: auto; }
   .bk { position: relative; inset: auto; padding: 14px 16px 12px; gap: 8px; }
-  .bk-figure { flex: none; aspect-ratio: 400 / 280; }
+  .bk-figure { flex: none; display: flex; flex-direction: column; gap: 8px; }
+  .bk-diagram, .bk-photo-frame { position: relative; inset: auto; aspect-ratio: 400 / 280; }
+  .bk-photo-frame { aspect-ratio: 4 / 3; }
+  .bk-inset { position: relative; right: auto; bottom: auto; width: 100%; box-shadow: none; }
+  .bk-inset-media { width: 70%; align-self: center; }
+  .bk-inset .bk-svg .d-label { font-size: 15px; }
+  .bk-inset .bk-svg .d-small { font-size: 13px; }
   .bk-headline { font-size: 22px; }
   .bk-body { font-size: 17px; line-height: 1.45; }
   .bk-caption { font-size: 13px; line-height: 1.35; }
-  .bk-controls { gap: 6px; position: sticky; bottom: 0; margin: 4px -16px -12px; padding: 8px 16px 10px; background: #e9d9b5; box-shadow: 0 -6px 12px rgba(233,217,181,.9); }
+  .bk-controls { gap: 6px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; margin: 0; padding: 8px 12px 10px; background: #e9d9b5; box-shadow: 0 -6px 12px rgba(233,217,181,.9); border-top: 1px solid rgba(110,80,45,.35); }
+  .bk-text { padding-bottom: 72px; }
   .bk-play-label { display: none; }
 }
 

@@ -254,7 +254,7 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       if (!L || !R || !L.isConnected || !R.isConnected) return;
       if (!force && this._rL === L && this._rR === R && this._rKey === i) return;
       this._rL = L; this._rR = R; this._rKey = i; this.syncPrev = null;
-      const box = R.closest('.open-book'); if (box) box.scrollTop = 0;
+      const box = R.closest('.open-book-tilt'); if (box) box.scrollTop = 0;
       this.ui = BOOK.render(L, R, i, {
         prev: () => this.goSpread(this.state.sp - 1), next: () => this.goSpread(this.state.sp + 1),
         play: () => this.togglePlay(), replay: () => this.replay(), seek: t => this.seek(t),
@@ -374,9 +374,9 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
     }
     // Phones: the book is one scrolling page, so keep the sentence being read in view.
     keepSentenceVisible() {
-      const box = this.bkR && this.bkR.closest('.open-book'), el = this.ui && this.ui.right.querySelector('.bk-s.is-now');
+      const box = this.bkR && this.bkR.closest('.open-book-tilt'), el = this.ui && this.ui.right.querySelector('.bk-s.is-now');
       if (!box || !el || box.scrollHeight <= box.clientHeight + 2) return;
-      const b = box.getBoundingClientRect(), r = el.getBoundingClientRect(), controls = 70;
+      const b = box.getBoundingClientRect(), r = el.getBoundingClientRect(), controls = 80;
       if (r.top >= b.top + 8 && r.bottom <= b.bottom - controls) return;
       const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
       box.scrollTo({ top: box.scrollTop + r.top - b.top - 60, behavior: smooth ? 'smooth' : 'auto' });
