@@ -37,24 +37,11 @@ button{font-family:inherit}
 <div ref="{{ parRef }}" style="position:absolute;inset:-3%">
 <div style="position:absolute;left:50%;top:50%;width:max(100%,177.7vh);aspect-ratio:1672/941;transform:translate(-50%,-50%)">
 <img src="assets/shelf.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-mask-image:radial-gradient(ellipse 82% 98% at 46% 82%,#000 58%,transparent 100%);mask-image:radial-gradient(ellipse 82% 98% at 46% 82%,#000 58%,transparent 100%)">
-<div style="position:absolute;left:13%;top:60%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.42),rgba(255,170,90,.1) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:{{ glowOpp }};pointer-events:none"></div>
-<div style="position:absolute;left:33%;top:62%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.42),rgba(255,170,90,.1) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:{{ glowSpi }};pointer-events:none"></div>
-<div style="position:absolute;left:85%;top:55%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(180,190,255,.28),rgba(255,190,120,.14) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:{{ glowPio }};pointer-events:none"></div>
+<div style="position:absolute;left:13%;top:60%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.42),rgba(255,170,90,.1) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:.35;pointer-events:none"></div>
+<div style="position:absolute;left:33%;top:62%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,196,120,.42),rgba(255,170,90,.1) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:.35;pointer-events:none"></div>
+<div style="position:absolute;left:85%;top:55%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(180,190,255,.28),rgba(255,190,120,.14) 40%,transparent 62%);mix-blend-mode:screen;transition:opacity .5s;opacity:.35;pointer-events:none"></div>
 <div style="position:absolute;left:56.5%;top:45%;width:40%;aspect-ratio:1;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,206,140,.5),rgba(255,170,90,.12) 38%,transparent 62%);mix-blend-mode:screen;transition:opacity .6s;opacity:{{ glowBook }};pointer-events:none"></div>
 <div onClick="{{ openBook }}" onMouseEnter="{{ hotBook }}" onMouseLeave="{{ hotOff }}" style="position:absolute;left:42%;top:11%;width:29%;height:67%;cursor:pointer"></div>
-<sc-for list="{{ hotspots }}" as="h" hint-placeholder-count="3">
-<div onClick="{{ h.go }}" onMouseEnter="{{ h.enter }}" onMouseLeave="{{ hotOff }}" style="position:absolute;left:{{ h.bx }}%;top:{{ h.by }}%;width:{{ h.bw }}%;height:{{ h.bh }}%;cursor:pointer">
-<div style="position:absolute;left:50%;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none">
-<div style="padding:10px 14px 11px;background:url(assets/paper.jpg) center/cover;color:#2e2014;box-shadow:0 10px 26px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:5px;min-width:150px;transition:opacity .35s,transform .35s;opacity:{{ h.cardOp }};transform:{{ h.cardT }}">
-<div style="font:600 9px/1 Montserrat,sans-serif;letter-spacing:.26em;color:#6b4e33">{{ h.code }}</div>
-<div style="font:500 20px/1 'Playfair Display',serif">{{ h.name }}</div>
-<div style="font:400 11px/1 Montserrat,sans-serif;color:#5a3f28">{{ h.years }}</div>
-<div style="font:600 9px/1 Montserrat,sans-serif;letter-spacing:.2em;color:#2f5f5b;margin-top:3px">OPEN CHAPTER →</div>
-</div>
-<div style="width:12px;height:12px;border-radius:50%;background:#5f9c96;border:2px solid rgba(239,226,198,.85);animation:ssPulse 2s infinite"></div>
-</div>
-</div>
-</sc-for>
 </div>
 </div>
 <canvas ref="{{ starRef }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;opacity:{{ space }};-webkit-mask-image:linear-gradient(#000 0%,rgba(0,0,0,.55) 30%,transparent 58%);mask-image:linear-gradient(#000 0%,rgba(0,0,0,.55) 30%,transparent 58%)"></canvas>
@@ -125,8 +112,11 @@ button{font-family:inherit}
 
 <sc-if value="{{ isContents }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;padding:3.3cqw 3.6cqw 3cqw;display:flex;flex-direction:column;gap:1cqw;transition:opacity .3s;opacity:{{ contentOp }}">
-<div style="display:flex;align-items:center;justify-content:center;gap:1cqw;font:600 max(9px,.74cqw)/1 Montserrat,sans-serif;letter-spacing:.24em;color:#6b4e33;text-transform:uppercase;white-space:nowrap"><span style="width:4cqw;height:1px;background:#8a6a40"></span>Part I · Mars Exploration Rovers<span style="width:4cqw;height:1px;background:#8a6a40"></span></div>
-<sc-for list="{{ leftEntries }}" as="e" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;justify-content:center;gap:1cqw;font:600 max(9px,.74cqw)/1 Montserrat,sans-serif;letter-spacing:.24em;color:#6b4e33;text-transform:uppercase;white-space:nowrap"><span style="width:4cqw;height:1px;background:#8a6a40"></span>CONTENTS<span style="width:4cqw;height:1px;background:#8a6a40"></span></div>
+<sc-if value="{{ archiveEmpty }}">
+<p style="margin:auto 0;text-align:center;font:400 max(16px,1.8cqw)/1.4 'EB Garamond',serif;color:#5a3f28">No mission chapters are available yet.</p>
+</sc-if>
+<sc-for list="{{ leftEntries }}" as="e" hint-placeholder-count="0">
 <div onClick="{{ e.go }}" onMouseEnter="{{ e.enter }}" onMouseLeave="{{ e.leave }}" style="flex:1;min-height:0;display:flex;align-items:center;gap:2.2cqw;cursor:pointer;padding-left:{{ e.indent }}">
 <div style="flex:none;width:11.5cqw;padding:.7cqw .7cqw 2.1cqw;background:#f3e8d2;position:relative;transition:transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s;transform:{{ e.polyT }};box-shadow:{{ e.shadow }}">
 <div style="position:absolute;top:-.9cqw;left:50%;width:5.4cqw;height:1.7cqw;background:rgba(226,208,168,.82);transform:translateX(-50%) rotate(-4deg);box-shadow:0 1px 2px rgba(0,0,0,.18)"></div>
@@ -148,7 +138,7 @@ button{font-family:inherit}
 <div style="position:absolute;inset:0;padding:3.1cqw 3.4cqw 2.7cqw;display:flex;flex-direction:column;gap:1.1cqw;transition:opacity .3s;opacity:{{ contentOp }}">
 <div style="display:flex;align-items:center;justify-content:center;gap:1cqw;font:600 max(9px,.74cqw)/1 Montserrat,sans-serif;letter-spacing:.24em;color:#6b4e33;text-transform:uppercase;white-space:nowrap"><span style="width:4cqw;height:1px;background:#8a6a40"></span>{{ ch.part }} · Chapter {{ ch.num }}<span style="width:4cqw;height:1px;background:#8a6a40"></span></div>
 <div style="display:flex;justify-content:center;gap:2.4cqw;padding-top:.5cqw">
-<sc-for list="{{ ch.photos }}" as="p" hint-placeholder-count="2">
+<sc-for list="{{ ch.photos }}" as="p" hint-placeholder-count="0">
 <div style="width:17cqw;padding:.6cqw .6cqw 2cqw;background:#f3e8d2;position:relative;box-shadow:0 .5cqw 1.2cqw rgba(60,35,15,.38);transform:rotate({{ p.rot }}deg)">
 <img src="{{ p.src }}" alt="" style="display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:sepia(.18) contrast(1.04)">
 <div style="position:absolute;top:0;left:0;width:1.7cqw;height:1.7cqw;background:linear-gradient(135deg,rgba(62,38,20,.92) 50%,transparent 50%)"></div>
@@ -164,15 +154,12 @@ button{font-family:inherit}
 <span style="font:600 max(8px,.64cqw)/1 Montserrat,sans-serif;letter-spacing:.24em;color:#6b4e33;white-space:nowrap">FIG. 1</span>
 </div>
 <div style="flex:1;min-height:0;position:relative">
-<sc-if value="{{ isMer }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ isMer }}" hint-placeholder-val="{{ false }}">
 <svg viewBox="0 0 420 262" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" fill="none" stroke-linecap="round" stroke-linejoin="round">
 <defs><pattern id="ssGridM" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" stroke="rgba(110,80,45,.13)" stroke-width=".5"></path></pattern></defs>
 <rect x="0" y="0" width="420" height="262" fill="url(#ssGridM)"></rect>
 <path d="M14 222H406" stroke="#5a3f28" stroke-width="1"></path>
 <path d="M14 226H406" stroke="#8a6a40" stroke-width="5" stroke-dasharray="1 7" opacity=".45"></path>
-<g stroke="#8a6a40" stroke-width=".7"><path d="M78 14H346M78 9V19M346 9V19"></path><path d="M78 19V112M346 19V112" stroke-dasharray="2 3" opacity=".6"></path><path d="M28 34V222M23 34H33M23 222H33"></path><path d="M33 34H264" stroke-dasharray="2 3" opacity=".6"></path></g>
-<rect x="194" y="8" width="36" height="12" fill="#e8d4aa" stroke="none"></rect><text x="212" y="17" text-anchor="middle" fill="#5a3f28" stroke="none" style="font:500 8.5px Montserrat,sans-serif">1.6 m</text>
-<rect x="21" y="112" width="14" height="32" fill="#e8d4aa" stroke="none"></rect><text x="28" y="128" text-anchor="middle" fill="#5a3f28" stroke="none" transform="rotate(-90 28 128)" style="font:500 8.5px Montserrat,sans-serif">1.5 m</text>
 <g stroke="{{ pc.p5 }}" stroke-width="1.4" style="transition:stroke .3s">
 <circle cx="110" cy="204" r="18" fill="rgba(239,224,189,.7)"></circle><circle cx="110" cy="204" r="15" stroke-width="2.2" stroke-dasharray="1.5 3" opacity=".5"></circle><circle cx="110" cy="204" r="5"></circle>
 <circle cx="200" cy="204" r="18" fill="rgba(239,224,189,.7)"></circle><circle cx="200" cy="204" r="15" stroke-width="2.2" stroke-dasharray="1.5 3" opacity=".5"></circle><circle cx="200" cy="204" r="5"></circle>
@@ -185,8 +172,6 @@ button{font-family:inherit}
 <g stroke="{{ pc.p3 }}" stroke-width="1.4" style="transition:stroke .3s"><rect x="78" y="116" width="268" height="7" rx="1" fill="rgba(239,224,189,.95)"></rect><path d="M105 116v7M132 116v7M159 116v7M186 116v7M213 116v7M240 116v7M267 116v7M294 116v7M321 116v7" stroke-width=".6"></path><path d="M150 123V126M270 123V126"></path></g>
 <g stroke="{{ pc.p2 }}" stroke-width="1.4" style="transition:stroke .3s"><path d="M190 116V102"></path><ellipse cx="190" cy="98" rx="17" ry="4.5" transform="rotate(-14 190 98)" fill="rgba(239,224,189,.9)"></ellipse><path d="M160 116V80"></path><circle cx="160" cy="78" r="2"></circle></g>
 <g stroke="{{ pc.p1 }}" stroke-width="1.4" style="transition:stroke .3s"><rect x="287" y="51" width="6" height="65" fill="rgba(239,224,189,.9)"></rect><rect x="268" y="34" width="48" height="17" rx="2" fill="rgba(239,224,189,.95)"></rect><circle cx="279" cy="42.5" r="4"></circle><circle cx="305" cy="42.5" r="4"></circle><path d="M288 39h8v7h-8z" stroke-width=".7"></path></g>
-<g stroke="#5a3f28" stroke-width="1.2"><path d="M30 250H114M30 246V254M72 248V252M114 246V254"></path></g>
-<text x="120" y="253" fill="#5a3f28" stroke="none" style="font:500 8px Montserrat,sans-serif">0.5 m</text>
 <g onMouseEnter="{{ hp.p1 }}" onMouseLeave="{{ hp.off }}" style="cursor:pointer"><path d="M316 40L364 54" stroke="#3f7a76" stroke-width=".8"></path><circle cx="372" cy="58" r="14" fill="transparent" stroke="none"></circle><circle cx="372" cy="58" r="9" fill="{{ cf.p1 }}" stroke="#3f7a76" stroke-width="1.2"></circle><text x="372" y="61.2" text-anchor="middle" fill="{{ ct.p1 }}" stroke="none" style="font:600 9px Montserrat,sans-serif">1</text></g>
 <g onMouseEnter="{{ hp.p2 }}" onMouseLeave="{{ hp.off }}" style="cursor:pointer"><path d="M192 94L197 56" stroke="#3f7a76" stroke-width=".8"></path><circle cx="198" cy="46" r="14" fill="transparent" stroke="none"></circle><circle cx="198" cy="46" r="9" fill="{{ cf.p2 }}" stroke="#3f7a76" stroke-width="1.2"></circle><text x="198" y="49.2" text-anchor="middle" fill="{{ ct.p2 }}" stroke="none" style="font:600 9px Montserrat,sans-serif">2</text></g>
 <g onMouseEnter="{{ hp.p3 }}" onMouseLeave="{{ hp.off }}" style="cursor:pointer"><path d="M88 118L61 93" stroke="#3f7a76" stroke-width=".8"></path><circle cx="54" cy="86" r="14" fill="transparent" stroke="none"></circle><circle cx="54" cy="86" r="9" fill="{{ cf.p3 }}" stroke="#3f7a76" stroke-width="1.2"></circle><text x="54" y="89.2" text-anchor="middle" fill="{{ ct.p3 }}" stroke="none" style="font:600 9px Montserrat,sans-serif">3</text></g>
@@ -204,8 +189,6 @@ button{font-family:inherit}
 <g stroke="{{ pc.p5 }}" stroke-width="1.3" style="transition:stroke .3s"><path d="M181 108l17-8 17 8v40l-17 8-17-8z" fill="rgba(239,224,189,.9)"></path><path d="M198 100v56" stroke-width=".6"></path><path d="M158 186L186 150" stroke-width=".9"></path><rect x="160" y="160" width="14" height="10" transform="rotate(-52 167 165)" fill="rgba(201,162,78,.55)"></rect></g>
 <g stroke="{{ pc.p1 }}" stroke-width="1.5" style="transition:stroke .3s"><path d="M150 36Q212 128 150 220Z" fill="rgba(239,224,189,.85)"></path><path d="M150 36L181 128L150 220M150 82L174 128L150 174" stroke-width=".6"></path><path d="M150 36V220" stroke-width="2.2"></path></g>
 <g stroke="{{ pc.p2 }}" stroke-width="1.3" style="transition:stroke .3s"><path d="M150 48L98 128M150 208L98 128" stroke-width=".9"></path><path d="M98 120L82 115V141L98 136Z" fill="rgba(239,224,189,.95)"></path></g>
-<g stroke="#5a3f28" stroke-width="1.2"><path d="M30 250H97M30 246V254M97 246V254"></path></g>
-<text x="103" y="253" fill="#5a3f28" stroke="none" style="font:500 8px Montserrat,sans-serif">1 m</text>
 <text x="160" y="232" fill="#5a3f28" stroke="none" style="font:500 8px Montserrat,sans-serif">⟵ Earth</text>
 <g onMouseEnter="{{ hp.p1 }}" onMouseLeave="{{ hp.off }}" style="cursor:pointer"><path d="M172 80L122 22" stroke="#3f7a76" stroke-width=".8"></path><circle cx="116" cy="16" r="14" fill="transparent" stroke="none"></circle><circle cx="116" cy="16" r="9" fill="{{ cf.p1 }}" stroke="#3f7a76" stroke-width="1.2"></circle><text x="116" y="19.2" text-anchor="middle" fill="{{ ct.p1 }}" stroke="none" style="font:600 9px Montserrat,sans-serif">1</text></g>
 <g onMouseEnter="{{ hp.p2 }}" onMouseLeave="{{ hp.off }}" style="cursor:pointer"><path d="M82 128L48 128" stroke="#3f7a76" stroke-width=".8"></path><circle cx="39" cy="128" r="14" fill="transparent" stroke="none"></circle><circle cx="39" cy="128" r="9" fill="{{ cf.p2 }}" stroke="#3f7a76" stroke-width="1.2"></circle><text x="39" y="131.2" text-anchor="middle" fill="{{ ct.p2 }}" stroke="none" style="font:600 9px Montserrat,sans-serif">2</text></g>
@@ -233,8 +216,7 @@ button{font-family:inherit}
 
 <sc-if value="{{ isContents }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;padding:3.3cqw 3.6cqw 3cqw;display:flex;flex-direction:column;gap:1cqw;transition:opacity .3s;opacity:{{ contentOp }}">
-<div style="display:flex;align-items:center;justify-content:center;gap:1cqw;font:600 max(9px,.74cqw)/1 Montserrat,sans-serif;letter-spacing:.24em;color:#6b4e33;text-transform:uppercase;white-space:nowrap"><span style="width:4cqw;height:1px;background:#8a6a40"></span>Part II · The Pioneer Program<span style="width:4cqw;height:1px;background:#8a6a40"></span></div>
-<sc-for list="{{ rightEntries }}" as="e" hint-placeholder-count="2">
+<sc-for list="{{ rightEntries }}" as="e" hint-placeholder-count="0">
 <div onClick="{{ e.go }}" onMouseEnter="{{ e.enter }}" onMouseLeave="{{ e.leave }}" style="flex:1;min-height:0;display:flex;align-items:center;gap:2.2cqw;cursor:pointer;padding-left:{{ e.indent }}">
 <div style="flex:none;width:11.5cqw;padding:.7cqw .7cqw 2.1cqw;background:#f3e8d2;position:relative;transition:transform .55s cubic-bezier(.2,.8,.2,1),box-shadow .55s;transform:{{ e.polyT }};box-shadow:{{ e.shadow }}">
 <div style="position:absolute;top:-.9cqw;left:50%;width:5.4cqw;height:1.7cqw;background:rgba(226,208,168,.82);transform:translateX(-50%) rotate(3deg);box-shadow:0 1px 2px rgba(0,0,0,.18)"></div>
@@ -266,7 +248,7 @@ button{font-family:inherit}
 </div>
 <div style="display:flex;align-items:center;gap:1cqw;font:600 max(9px,.76cqw)/1 Montserrat,sans-serif;letter-spacing:.28em;color:#5a3f28;white-space:nowrap"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,#8a6a40)"></div>MISSION DATA<div style="flex:1;height:1px;background:linear-gradient(90deg,#8a6a40,transparent)"></div></div>
 <div style="display:flex;flex-direction:column;border-top:1.5px solid rgba(90,63,40,.7);border-bottom:1.5px solid rgba(90,63,40,.7)">
-<sc-for list="{{ ch.data }}" as="r" hint-placeholder-count="6">
+<sc-for list="{{ ch.data }}" as="r" hint-placeholder-count="0">
 <div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:1.2cqw;padding:.5cqw .2cqw;border-bottom:.5px solid rgba(90,63,40,.28)">
 <span style="font:400 max(9px,1cqw)/1.25 Montserrat,sans-serif;color:#6b4e33">{{ r.k }}</span>
 <span style="font:500 max(9px,1cqw)/1.25 Montserrat,sans-serif;color:#2e2014;font-variant-numeric:tabular-nums">{{ r.v }}</span>
@@ -279,7 +261,7 @@ button{font-family:inherit}
 <button onClick="{{ toggleNarr }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:.6cqw;padding:.55cqw 1cqw;border:1px solid #3f7a76;border-radius:2px;cursor:pointer;font:600 max(9px,.7cqw)/1 Montserrat,sans-serif;letter-spacing:.18em;transition:background .25s,color .25s;background:{{ narrBg }};color:{{ narrColor }}" style-hover="box-shadow:0 0 0 3px rgba(63,122,118,.18)">{{ narrLabel }}</button>
 </div>
 <p style="margin:0;flex:1;min-height:0;font:400 max(11px,1.16cqw)/1.42 'EB Garamond',serif;color:#2e2014;text-wrap:pretty;hyphens:auto;overflow:hidden">
-<sc-for list="{{ sentences }}" as="s" hint-placeholder-count="4"><span style="padding:.05em .12em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background .4s,color .4s;background:{{ s.bg }};color:{{ s.color }}">{{ s.text }}</span></sc-for>
+<sc-for list="{{ sentences }}" as="s" hint-placeholder-count="0"><span style="padding:.05em .12em;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background .4s,color .4s;background:{{ s.bg }};color:{{ s.color }}">{{ s.text }}</span></sc-for>
 </p>
 <div style="display:flex;justify-content:space-between;align-items:center;font:600 max(9px,.7cqw)/1 Montserrat,sans-serif;letter-spacing:.2em">
 <span onClick="{{ goContents }}" style="cursor:pointer;color:#6b4e33;transition:color .2s" style-hover="color:#2f5f5b">‹ CONTENTS</span>
@@ -314,7 +296,6 @@ button{font-family:inherit}
 <svg viewBox="0 0 24 24" style="width:5cqw;height:5cqw;position:relative;filter:drop-shadow(0 1px 0 rgba(0,0,0,.6))"><path d="M12 0 L13.4 10.6 L24 12 L13.4 13.4 L12 24 L10.6 13.4 L0 12 L10.6 10.6 Z" fill="#d9b46a"></path></svg>
 <div style="position:relative;font:500 3.3cqw/1 'Playfair Display',serif;letter-spacing:.12em;color:#d9b46a;text-shadow:0 1px 0 rgba(0,0,0,.6);text-align:center">STELLAR<br>SCRIPTS</div>
 <div style="position:relative;font:italic 400 1.4cqw/1 'Playfair Display',serif;color:#c9a25a">The Mission Archive</div>
-<div style="position:relative;margin-top:6cqw;font:600 .7cqw/1 Montserrat,sans-serif;letter-spacing:.3em;color:rgba(217,180,106,.8)">OPPORTUNITY · SPIRIT · PIONEER 10 · PIONEER 11</div>
 </div>
 <div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);border-radius:.9cqw 0 0 .9cqw;background:radial-gradient(circle at 20% 30%,rgba(217,180,106,.7) 0 1px,transparent 1.5px) 0 0/3.1cqw 3.1cqw,radial-gradient(circle at 70% 60%,rgba(217,180,106,.45) 0 .8px,transparent 1.2px) 0 0/2.3cqw 2.3cqw,radial-gradient(ellipse at 30% 30%,#2a2238,#130f1a 70%);box-shadow:inset 0 0 0 1.3cqw #3a2014;display:grid;place-items:center">
 <div style="padding:2cqw 3cqw;background:url(assets/paper.jpg) center/cover;text-align:center;display:flex;flex-direction:column;gap:.6cqw;box-shadow:0 .3cqw 1cqw rgba(0,0,0,.5)"><div style="font:600 .7cqw/1 Montserrat,sans-serif;letter-spacing:.3em;color:#6b4e33">EX LIBRIS</div><div style="font:italic 400 1.8cqw/1 'Playfair Display',serif;color:#2e2014">The Mission Archive</div></div>
@@ -324,6 +305,7 @@ button{font-family:inherit}
 </div>
 </div>
 
+<sc-if value="{{ hasChapters }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;right:4vw;top:calc(50% + 28px);width:min(410px,38vw);height:min(640px,calc(86vh - 56px));transition:transform .75s cubic-bezier(.2,.8,.2,1),opacity .5s;transform:{{ askT }};opacity:{{ askOp }};pointer-events:{{ askPe }}">
 <div style="position:absolute;inset:0;background:url(assets/paper.jpg) center/cover;transform:rotate(2.4deg) translate(10px,8px);filter:brightness(.78);box-shadow:0 20px 40px rgba(0,0,0,.5);border-radius:3px"></div>
 <div style="position:absolute;inset:0;background:url(assets/paper.jpg) center/cover;transform:rotate(-1.3deg) translate(-4px,4px);filter:brightness(.88);border-radius:3px"></div>
@@ -336,7 +318,7 @@ button{font-family:inherit}
 <div style="display:flex;align-items:center;gap:10px;width:100%;font:500 10px/1 Montserrat,sans-serif;letter-spacing:.3em;color:#5a3f28"><div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,#8a6a40)"></div>EXPLORE · LEARN · DISCOVER<div style="flex:1;height:1px;background:linear-gradient(90deg,#8a6a40,transparent)"></div></div>
 </div>
 <div ref="{{ msgRef }}" style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 4px 4px 2px;scrollbar-width:thin;scrollbar-color:rgba(110,80,45,.4) transparent">
-<sc-for list="{{ msgs }}" as="m" hint-placeholder-count="1">
+<sc-for list="{{ msgs }}" as="m" hint-placeholder-count="0">
 <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;justify-content:flex-end;align-items:flex-start;gap:8px;animation:ssRise .4s ease both">
 <div style="max-width:78%;padding:10px 13px;background:#cfe0d8;border:1px solid rgba(63,122,118,.55);border-radius:3px;font:400 15.5px/1.4 'EB Garamond',serif;color:#1f3533">{{ m.text }}</div>
@@ -357,9 +339,12 @@ button{font-family:inherit}
 <span style="font:italic 400 13px/1 'EB Garamond',serif;color:#6b4e33">searching the shelves…</span>
 </div>
 </sc-if>
-<sc-if value="{{ showSugg }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ askError }}">
+<p role="status" style="margin:0;font:400 15.5px/1.4 'EB Garamond',serif;color:#5a3f28">{{ askError }}</p>
+</sc-if>
+<sc-if value="{{ showSugg }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-wrap:wrap;gap:6px;padding-left:36px;margin-top:2px">
-<sc-for list="{{ sugg }}" as="s" hint-placeholder-count="3">
+<sc-for list="{{ sugg }}" as="s" hint-placeholder-count="0">
 <button onClick="{{ s.go }}" style="padding:7px 10px;border:1px solid rgba(63,122,118,.6);background:rgba(255,250,240,.35);color:#2f5f5b;font:500 11px/1.2 Montserrat,sans-serif;border-radius:2px;cursor:pointer;text-align:left;transition:background .2s" style-hover="background:rgba(63,122,118,.14)">{{ s.text }}</button>
 </sc-for>
 </div>
@@ -373,6 +358,7 @@ button{font-family:inherit}
 </div>
 </div>
 </div>
+</sc-if>
 
 <sc-if value="{{ showAskBtn }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ openAsk }}" style="position:absolute;right:24px;bottom:18px;display:flex;align-items:center;gap:12px;padding:13px 20px 13px 16px;background:#3f7a76;border:none;border-radius:2px;color:#f3efe4;font:600 11px/1 Montserrat,sans-serif;letter-spacing:.2em;white-space:nowrap;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5);animation:ssRise .6s ease both;transition:background .2s" style-hover="background:#4a8a85">
@@ -399,7 +385,6 @@ ASK THE ARCHIVE</button>
 <div style="position:absolute;left:0;right:0;bottom:0;height:26vh;background:linear-gradient(transparent,rgba(8,5,4,.85));pointer-events:none"></div>
 <div style="position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;animation:ssRise 1.2s 1.2s ease both">
 <button onClick="{{ openBook }}" style="display:flex;align-items:center;gap:12px;padding:13px 22px;background:rgba(12,9,8,.5);border:1px solid rgba(95,156,150,.7);border-radius:2px;color:#d6ebe6;font:600 11px/1 Montserrat,sans-serif;letter-spacing:.26em;white-space:nowrap;cursor:pointer;backdrop-filter:blur(6px);transition:background .25s" style-hover="background:rgba(63,122,118,.45)"><span style="width:8px;height:8px;border-radius:50%;background:#5f9c96;animation:ssPulse 2s infinite"></span>OPEN THE ARCHIVE</button>
-<div style="font:italic 400 15px/1 'EB Garamond',serif;color:#d8c5a0;text-shadow:0 1px 8px rgba(0,0,0,.9)">or touch a model to jump to its chapter</div>
 </div>
 </sc-if>
 
@@ -417,41 +402,12 @@ ASK THE ARCHIVE</button>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;shelf&quot;,&quot;opening&quot;,&quot;contents&quot;,&quot;chapter&quot;,&quot;ask&quot;],&quot;default&quot;:&quot;shelf&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;showDock&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;space&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;default&quot;:0.8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Atmosphere&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;default&quot;:0.45,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Atmosphere&quot;},&quot;voice&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;liveAnswers&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
-const CH = [
-  { key:'opportunity', num:'One', part:'Mars Exploration', title:'Opportunity', subtitle:'Mars Exploration Rover B', code:'MER-B', year:'2004', sub:'Mars Exploration Rover · 2003 – 2019', pageL:'12', pageR:'13', diagram:'mer', figTitle:'Mars Exploration Rover, side elevation',
-    contentsPhoto:'assets/opp-rover.jpg',
-    photos:[{src:'assets/opp-rover.jpg',cap:'MERIDIANI PLANUM',rot:-2.5},{src:'assets/opp-sunset.jpg',cap:'DUSK ON MARS',rot:2.2}],
-    data:[['Launch','July 7, 2003 · Delta II'],['Landing','January 25, 2004'],['Landing site','Meridiani Planum'],['Planned mission','90 sols'],['Last contact','June 10, 2018'],['Distance driven','45.16 km']],
-    narration:['Opportunity bounced to a stop inside a small crater on January 25, 2004 — a hole-in-one on the plains of Meridiani.','Within weeks it found tiny hematite spheres, nicknamed blueberries, and layered rock that pointed to a wetter, more habitable ancient Mars.','Engineers had planned for ninety sols. The rover kept working for more than fourteen years, and in 2015 it passed the length of a marathon.','In June 2018 a planet-wide dust storm darkened the sky over Perseverance Valley. Its solar panels fell silent, and after months of recovery attempts the mission was declared complete in February 2019.'],
-    sugg:['Why did it outlive its 90-sol plan?','What are the “blueberries”?','What ended the mission?'] },
-  { key:'spirit', num:'Two', part:'Mars Exploration', title:'Spirit', subtitle:'Mars Exploration Rover A', code:'MER-A', year:'2004', sub:'Mars Exploration Rover · 2003 – 2011', pageL:'28', pageR:'29', diagram:'mer', figTitle:'Mars Exploration Rover, side elevation',
-    contentsPhoto:'assets/spirit-model.jpg',
-    photos:[{src:'assets/spirit-model.jpg',cap:'MER-A · MODEL',rot:2},{src:'assets/mars-painting.jpg',cap:'COLUMBIA HILLS · PRINT',rot:-2.4}],
-    data:[['Launch','June 10, 2003 · Delta II'],['Landing','January 4, 2004'],['Landing site','Gusev Crater'],['Planned mission','90 sols'],['Last contact','March 22, 2010'],['Distance driven','7.73 km']],
-    narration:['Spirit landed in Gusev Crater three weeks before its twin, aiming for what looked like an ancient lakebed.','The plains turned out to be volcanic, so the rover climbed into the Columbia Hills, where it found rocks altered by water.','In 2007 a stuck front wheel scraped open bright soil near Home Plate — almost pure silica, a sign of ancient hot springs or steam vents.','In 2009 Spirit bogged down in soft sand at a site called Troy. It worked on as a stationary science station until its last signal in March 2010.'],
-    sugg:['How did a broken wheel help science?','Why was Gusev Crater chosen?','What happened at Troy?'] },
-  { key:'pioneer10', num:'Three', part:'The Outer Planets', title:'Pioneer 10', subtitle:'First to Jupiter', code:'PNR-10', year:'1972', sub:'Jupiter flyby · 1972 – 2003', pageL:'44', pageR:'45', diagram:'pioneer', figTitle:'Pioneer 10 / 11 spacecraft, side elevation',
-    contentsPhoto:'assets/pioneer-probe.jpg',
-    photos:[{src:'assets/pioneer-probe.jpg',cap:'PIONEER 10 · NASA AMES',rot:-2},{src:'assets/launch.jpg',cap:'ATLAS-CENTAUR LAUNCH',rot:2.4}],
-    data:[['Launch','March 2, 1972 · Atlas-Centaur'],['Asteroid belt','First crossing, 1972 – 73'],['Jupiter flyby','December 3, 1973'],['Mass','258 kg'],['Power','4 × SNAP-19 RTGs'],['Last signal','January 23, 2003']],
-    narration:['Pioneer 10 was the first spacecraft to cross the asteroid belt, a region some feared would be impassable.','In December 1973 it became the first to fly past Jupiter, returning close-up images and measuring the planet’s fierce radiation belts.','Bolted to its frame is a gold-anodized plaque showing who sent it, and from where.','Its final faint signal reached Earth in January 2003. Pioneer 10 now drifts toward the red star Aldebaran.'],
-    sugg:['What is on the Pioneer plaque?','How far away is Pioneer 10 now?','How was it powered?'] },
-  { key:'pioneer11', num:'Four', part:'The Outer Planets', title:'Pioneer 11', subtitle:'First to Saturn', code:'PNR-11', year:'1973', sub:'Jupiter & Saturn · 1973 – 1995', pageL:'60', pageR:'61', diagram:'pioneer', figTitle:'Pioneer 10 / 11 spacecraft, side elevation',
-    contentsPhoto:'assets/dsn-dish.jpg',
-    photos:[{src:'assets/probe-model.jpg',cap:'PIONEER 11 · MODEL',rot:2},{src:'assets/dsn-dish.jpg',cap:'DEEP SPACE NETWORK',rot:-2.2}],
-    data:[['Launch','April 5, 1973 · Atlas-Centaur'],['Jupiter flyby','December 1974'],['Saturn flyby','September 1, 1979'],['Mass','259 kg'],['Power','4 × SNAP-19 RTGs'],['Routine contact ended','September 30, 1995']],
-    narration:['Pioneer 11 followed its twin, swinging past Jupiter in 1974 and using the giant planet’s gravity to bend its path toward Saturn.','In September 1979 it became the first spacecraft to visit Saturn, passing beneath the rings and discovering a new one, the F ring.','Its route scouted the way for the Voyagers that followed.','As its power faded, routine contact ended in 1995. It is coasting out of the solar system toward the constellation Aquila.'],
-    sugg:['How did it use Jupiter to reach Saturn?','What did it find at Saturn?','Where is it heading?'] }
-];
-const PARTS = {
-  mer:[['Pancam mast','Stereo panoramic cameras about 1.5 m above the ground — roughly human eye height.'],['Antennas','A steerable high-gain dish talks directly to Earth; a low-gain mast is the backup. Most data was relayed via Mars orbiters.'],['Solar array','Triple-junction cells, about 140 W at full sun. Wind gusts that cleaned the panels kept Opportunity alive for years.'],['Warm electronics box','The insulated body keeps computers and batteries warm through nights near −100 °C.'],['Rocker-bogie','A spring-less six-wheel suspension that keeps all wheels on uneven ground.'],['Instrument arm','Carries a microscopic imager, two spectrometers and the Rock Abrasion Tool.']],
-  pioneer:[['High-gain antenna','A 2.74 m dish kept pointed at Earth while the spacecraft spun for stability.'],['Feed & medium-gain horn','Mounted on struts at the dish focus; the backbone of the radio link across billions of kilometres.'],['RTG power','Four SNAP-19 radioisotope generators on two booms, held far from the sensitive instruments.'],['Magnetometer boom','A 6.6 m boom holds the magnetometer clear of the spacecraft’s own magnetic field.'],['Compartment & plaque','The hexagonal equipment bay; the famous plaque is mounted on the antenna support struts.']]
-};
+const CH = [];
 const INK = '#3d2a1a', TEAL = '#3f7a76';
 const DOCK = [['01','Shelf','shelf'],['02','Opening','opening'],['03','Contents','contents'],['04','Chapter','chapter'],['05','Ask','ask']];
 
 class Component extends DCLogic {
-  state = { screen:'shelf', phase:0, cover:false, coverGone:false, ch:0, ask:false, flip:null, fade:false, hot:-1, entry:-1, part:0, narr:-1, msgs:[], input:'', typing:false, ready:false };
+  state = { screen:'shelf', phase:0, cover:false, coverGone:false, ch:0, ask:false, flip:null, fade:false, hot:-1, entry:-1, part:0, narr:-1, msgs:[], input:'', typing:false, askError:'', ready:false };
   starRef = React.createRef(); dustRef = React.createRef(); parRef = React.createRef(); msgRef = React.createRef(); inputRef = React.createRef();
   timers = []; mx = 0; my = 0; tmx = 0; tmy = 0;
 
@@ -527,6 +483,7 @@ class Component extends DCLogic {
   }
 
   jump(s) {
+    if (!CH.length && (s === 'chapter' || s === 'ask')) s = 'contents';
     if (s === 'shelf') return this.goShelf();
     if (s === 'opening') return this.startOpening(null);
     this.clearTimers(); this.stopNarr();
@@ -566,51 +523,45 @@ class Component extends DCLogic {
     this.later(() => this.setState(apply), 430);
     this.later(() => this.setState({ flip:null, fade:false }), 920);
   }
-  openChapter(i) { this.turn('fwd', { screen:'chapter', ch:i, part:0 }); }
+  openChapter(i) { if (CH[i]) this.turn('fwd', { screen:'chapter', ch:i, part:0 }); }
   goContents() { this.turn('back', { screen:'contents', ask:false }); }
   nextCh() { const n = this.state.ch + 1; if (n < CH.length) this.turn('fwd', { ch:n, part:0 }); else this.goContents(); }
   prevCh() { const n = this.state.ch - 1; if (n >= 0) this.turn('back', { ch:n, part:0 }); else this.goContents(); }
 
-  greet(c) { return { role:'archive', text:`Hello — I’m the archivist. Ask me anything about ${c.title}, its mission, or the worlds it explored.` }; }
   openAsk() {
+    if (!CH[this.state.ch]) return;
     if (this.state.screen !== 'chapter') this.setState({ screen:'chapter', cover:true, coverGone:true });
-    const c = CH[this.state.ch];
-    const msgs = this.state.msgs.length ? this.state.msgs : [this.greet(c)];
-    this.setState({ ask:true, msgs });
-    setTimeout(() => this.inputRef.current && this.inputRef.current.focus({ preventScroll:true }), 700);
+    this.setState({ ask:true });
+    this.later(() => this.inputRef.current?.focus({ preventScroll:true }), 700);
   }
   closeAsk() { this.setState({ ask:false }); }
-  canned(q, c) {
-    const s = q.toLowerCase();
-    if (/blueberr|hematite/.test(s)) return 'The “blueberries” are small spheres of the iron mineral hematite, weathering out of layered rock at Meridiani. On Earth, concretions like these usually form when groundwater moves through sediment — strong evidence that liquid water once soaked this ground.';
-    if (/end|storm|die|last|silent/.test(s) && c.key === 'opportunity') return 'A planet-encircling dust storm in mid-2018 blocked sunlight from Opportunity’s solar panels. Its last transmission arrived on June 10, 2018. After months of recovery attempts, NASA declared the mission complete on February 13, 2019.';
-    if (/90|outliv|long|last so/.test(s)) return 'Ninety sols was a conservative estimate: engineers expected dust to slowly smother the solar panels. Instead, Martian winds periodically swept them clean, and careful winter parking on sun-facing slopes kept the rover warm and powered for more than fourteen years.';
-    if (/plaque/.test(s)) return 'The plaque shows a man and a woman beside an outline of the spacecraft for scale, a diagram of the Solar System marking Earth as the origin, and a map locating the Sun relative to pulsars — a message for anyone who might one day find it.';
-    if (/power|rtg/.test(s)) return 'Each Pioneer carried four SNAP-19 radioisotope thermoelectric generators, turning the heat of decaying plutonium-238 into electricity. Sunlight is far too weak past Jupiter for solar panels of that era.';
-    if (/wheel|silica|home plate/.test(s)) return 'After Spirit’s right-front wheel stopped turning in 2006, it drove backwards, dragging the dead wheel. In 2007 that wheel scraped up bright soil that turned out to be nearly pure silica — evidence of ancient hot springs or steam vents.';
-    if (/saturn|ring/.test(s)) return 'Pioneer 11 reached Saturn on September 1, 1979 — the first spacecraft to do so. It discovered the narrow F ring and a small moon, and confirmed the route was safe for the Voyagers.';
-    return `${c.narration[0]} ${c.narration[1]} (The live archivist is offline, so this answer comes from the chapter’s pages.)`;
-  }
   async send(text) {
     const q = (text ?? this.state.input).trim();
-    if (!q || this.state.typing) return;
     const c = CH[this.state.ch];
+    if (!c || !q || this.state.typing) return;
+    if (this.props.liveAnswers === false || typeof window.claude?.complete !== 'function') {
+      this.setState({ askError:'The Archive is unavailable right now.' });
+      return;
+    }
+
     const msgs = [...this.state.msgs, { role:'user', text:q }];
-    this.setState({ msgs, input:'', typing:true });
-    const t0 = Date.now();
-    let ans;
+    this.setState({ msgs, input:'', typing:true, askError:'' });
     try {
-      if (this.props.liveAnswers === false || !window.claude) throw new Error('offline');
-      const system = `You are "the Archive", a warm, precise archivist inside Stellar Scripts, an interactive storybook about NASA missions (Opportunity, Spirit, Pioneer 10, Pioneer 11). The reader is on the chapter "${c.title}". Chapter facts: ${c.data.map(r => r.join(': ')).join('; ')}. Narration: ${c.narration.join(' ')} Answer in 2–4 short sentences of plain prose (no markdown, no lists), accurate and evocative, suitable for curious students. If unsure, say so.`;
-      ans = await window.claude.complete({ system, max_tokens:320, messages: msgs.filter((m, i) => i > 0).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })) });
-    } catch (e) { ans = this.canned(q, c); }
-    const wait = Math.max(0, 900 - (Date.now() - t0));
-    setTimeout(() => this.setState(s => ({ msgs:[...s.msgs, { role:'archive', text:String(ans || '').trim() }], typing:false })), wait);
+      const system = `You are "the Archive", an archivist in the Stellar Scripts interactive storybook. Answer using the supplied chapter material. If the material does not answer the question, say so. Keep your answer short and use plain prose. Chapter: ${c.title}. Facts: ${c.data.map(r => r.join(': ')).join('; ')}. Narration: ${c.narration.join(' ')}`;
+      const answer = await window.claude.complete({ system, max_tokens:320, messages: msgs.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text })) });
+      const reply = typeof answer === 'string' ? answer.trim() : '';
+      if (reply) this.setState({ msgs:[...msgs, { role:'archive', text:reply }] });
+      else this.setState({ askError:'The Archive did not return an answer.' });
+    } catch (e) {
+      this.setState({ askError:'The Archive is unavailable right now.' });
+    } finally {
+      this.setState({ typing:false });
+    }
   }
 
   toggleNarr() { if (this.state.narr >= 0) this.stopNarr(); else { try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} this.speak(0); } }
   speak(i) {
-    const ss = CH[this.state.ch].narration;
+    const ss = CH[this.state.ch]?.narration ?? [];
     if (i >= ss.length) return this.stopNarr();
     this.setState({ narr:i });
     const tok = this.narrTok = {}; const st = Date.now();
@@ -634,16 +585,13 @@ class Component extends DCLogic {
     const c = CH[S.ch];
     const space = P.space ?? .8;
     const hot = S.hot;
-    const mkHot = (i, ch, bx, by, bw, bh, code, name, years) => ({ bx, by, bw, bh, code, name, years,
-      cardOp: hot === i ? 1 : 0, cardT: hot === i ? 'translateY(0)' : 'translateY(6px)',
-      go: () => this.startOpening(ch), enter: () => this.setState({ hot:i }) });
     const entry = (i, indent) => { const e = CH[i], on = S.entry === i, rot = [-4, 3, -2.5, 4][i];
       return { num:e.num.toUpperCase(), title:e.title, sub:e.sub, page:e.pageL, photo:e.contentsPhoto, indent,
         polyT: on ? 'rotate(0deg) translateY(-0.5cqw) scale(1.05)' : `rotate(${rot}deg)`,
         shadow: on ? '0 1.6cqw 2.6cqw rgba(50,28,10,.45)' : '0 .4cqw 1cqw rgba(60,35,15,.35)',
         ctaOp: on ? 1 : 0, ctaT: on ? 'translateX(0)' : 'translateX(-6px)',
         go: () => this.openChapter(i), enter: () => this.setState({ entry:i }), leave: () => this.setState({ entry:-1 }) }; };
-    const parts = PARTS[c.diagram], pc = {}, cf = {}, ct = {}, hp = { off: () => this.setState({ part:0 }) };
+    const parts = c?.parts ?? [], pc = {}, cf = {}, ct = {}, hp = { off: () => this.setState({ part:0 }) };
     for (let k = 1; k <= 6; k++) { const on = S.part === k; pc['p'+k] = on ? TEAL : INK; cf['p'+k] = on ? TEAL : '#efe0bd'; ct['p'+k] = on ? '#f3efe4' : '#2f5f5b'; hp['p'+k] = () => this.setState({ part:k }); }
     const part = S.part ? parts[S.part - 1] : null;
     const askOn = S.ask && scr === 'chapter';
@@ -658,10 +606,9 @@ class Component extends DCLogic {
       shelfZoom: scr === 'opening' ? 'scale(2.3)' : 'scale(1)',
       shelfOp: scr === 'opening' && S.phase >= 2 ? 0 : 1,
       isShelfUI: scr === 'shelf',
-      glowOpp: hot === 0 ? 1 : .4, glowSpi: hot === 1 ? 1 : .4, glowPio: hot === 2 ? 1 : .45, glowBook: hot === 9 ? 1 : .35,
+      glowBook: hot === 9 ? 1 : .35,
       hotBook: () => this.setState({ hot:9 }), hotOff: () => this.setState({ hot:-1 }),
       openBook: () => this.startOpening(null),
-      hotspots: [mkHot(0, 0, 2, 41, 22, 33, 'MER-B · 1:24 MODEL', 'Opportunity', '2004 — 2018'), mkHot(1, 1, 24.5, 44, 17, 32, 'MER-A · 1:24 MODEL', 'Spirit', '2004 — 2010'), mkHot(2, 2, 73, 37, 24, 42, 'PIONEER 10 · 11', 'Pioneer', '1972 — 2003')],
       showOpening: scr === 'opening' && S.phase >= 1,
       openOp: S.phase >= 2 ? 1 : 0,
       openT: S.phase >= 2 ? 'translate(-50%,-50%) scale(1.04)' : 'translate(-50%,-50%) scale(1.32)',
@@ -677,15 +624,17 @@ class Component extends DCLogic {
       coverT: S.cover ? 'translateZ(2px) rotateY(-180deg)' : 'translateZ(2px) rotateY(0deg)',
       flipF: S.flip === 'fwd', flipB: S.flip === 'back',
       contentOp: S.fade ? 0 : 1,
-      isContents: scr === 'contents', isChapter: scr === 'chapter',
-      leftEntries: [entry(0, '0'), entry(1, '3cqw')], rightEntries: [entry(2, '1.5cqw'), entry(3, '4cqw')],
-      ch: { ...c, data: c.data.map(([k, v]) => ({ k, v })) },
-      isMer: c.diagram === 'mer', isPioneer: c.diagram === 'pioneer',
+      isContents: scr === 'contents', isChapter: scr === 'chapter' && !!c,
+      archiveEmpty: CH.length === 0, hasChapters: CH.length > 0,
+      leftEntries: CH.slice(0, 2).map((_, i) => entry(i, ['0', '3cqw'][i])),
+      rightEntries: CH.slice(2, 4).map((_, i) => entry(i + 2, ['1.5cqw', '4cqw'][i])),
+      ch: c && { ...c, data: c.data.map(([k, v]) => ({ k, v })) },
+      isMer: c?.diagram === 'mer' && parts.length > 0, isPioneer: c?.diagram === 'pioneer' && parts.length > 0,
       pc, cf, ct, hp,
       partLabel: part ? `${S.part} · ${part[0]}` : 'Inspect',
       partText: part ? part[1] : 'Hover a numbered callout to examine a component of the spacecraft.',
       partColor: part ? '#2f5f5b' : '#6b4e33',
-      sentences: c.narration.map((t, i) => ({ text: t + ' ', bg: S.narr === i ? 'rgba(63,122,118,.16)' : 'transparent', color: S.narr === i ? '#1f3533' : (S.narr >= 0 ? 'rgba(46,32,20,.55)' : '#2e2014') })),
+      sentences: c?.narration.map((t, i) => ({ text: t + ' ', bg: S.narr === i ? 'rgba(63,122,118,.16)' : 'transparent', color: S.narr === i ? '#1f3533' : (S.narr >= 0 ? 'rgba(46,32,20,.55)' : '#2e2014') })) ?? [],
       toggleNarr: () => this.toggleNarr(),
       narrLabel: S.narr >= 0 ? '❚❚  PAUSE' : '▶  NARRATE',
       narrBg: S.narr >= 0 ? TEAL : 'transparent', narrColor: S.narr >= 0 ? '#f3efe4' : '#2f5f5b',
@@ -694,18 +643,19 @@ class Component extends DCLogic {
       askT: askOn ? 'translateY(-50%)' : 'translateY(-50%) translateX(115%) rotate(4deg)',
       askOp: askOn ? 1 : 0, askPe: askOn ? 'auto' : 'none',
       openAsk: () => this.openAsk(), closeAsk: () => this.closeAsk(),
-      showAskBtn: scr === 'chapter' && !S.ask,
+      showAskBtn: !!c && scr === 'chapter' && !S.ask,
       msgs: S.msgs.map(m => ({ text: m.text, isUser: m.role === 'user', isArchive: m.role !== 'user' })),
       typing: S.typing,
-      showSugg: userCount < 2 && !S.typing,
-      sugg: c.sugg.map(t => ({ text: t, go: () => this.send(t) })),
+      askError: S.askError,
+      showSugg: !!c?.sugg.length && userCount < 2 && !S.typing,
+      sugg: c?.sugg.map(t => ({ text: t, go: () => this.send(t) })) ?? [],
       input: S.input,
       onInput: e => this.setState({ input: e.target.value }),
       onInputKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.send(); } },
       sendInput: () => this.send(),
       goShelf: () => this.goShelf(),
       showDock: P.showDock ?? true,
-      dock: DOCK.map(([n, label, k]) => ({ n, label, bg: dockActive === k ? 'rgba(63,122,118,.55)' : 'transparent', color: dockActive === k ? '#eef6f3' : '#cdb993', go: () => this.jump(k) }))
+      dock: DOCK.filter(([, , k]) => CH.length || (k !== 'chapter' && k !== 'ask')).map(([n, label, k]) => ({ n, label, bg: dockActive === k ? 'rgba(63,122,118,.55)' : 'transparent', color: dockActive === k ? '#eef6f3' : '#cdb993', go: () => this.jump(k) }))
     };
   }
 }
