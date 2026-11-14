@@ -243,7 +243,7 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       if (S.screen === 'chapter' && i === S.sp) return;
       const to = list[i];
       if (!sync && this.narr) {
-        if (this.narr.id === to.id) this.audio.currentTime = this.narr.cue.pages[to.pi].start + .01;
+        if (this.narr.id === to.id) this.audio.currentTime = this.narr.cue.pages[to.pi].start + .05;
         else this.stopNarr();
       }
       const dir = S.screen !== 'chapter' || i > S.sp ? 'fwd' : 'back';
