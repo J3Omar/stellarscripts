@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sources and credits · Stellar Scripts</title>
+  <style>
+    body { margin: 0; background: #f1e6cc; color: #2e2014; font: 17px/1.55 'EB Garamond', Georgia, serif; }
+    main { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+    h1 { font: 500 34px/1.1 'Playfair Display', Georgia, serif; margin: 0 0 6px; }
+    h2 { font: 600 13px/1.2 Montserrat, Arial, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #6b4e33; margin: 36px 0 12px; border-bottom: 1px solid rgba(110,80,45,.35); padding-bottom: 8px; }
+    p.note { font-size: 15px; color: #4a3420; }
+    a { color: #2f6f6a; }
+    a:focus-visible { outline: 2px solid #2f6f6a; outline-offset: 2px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+    figure { margin: 0; background: #f8f0dd; border: 1px solid rgba(110,80,45,.3); padding: 10px; }
+    figure img, figure video { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: #1b140d; display: block; }
+    figcaption { font-size: 15px; margin-top: 8px; }
+    .credit { display: block; font: 600 12px/1.4 Montserrat, Arial, sans-serif; color: #6b4e33; margin-top: 4px; }
+    ul { padding-left: 20px; }
+    li { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sources and credits</h1>
+    <p class="note">Stellar Scripts is a student project for the NASA Space Apps Challenge 2026. It is not made, approved or endorsed by NASA. NASA images are shown with the credit line NASA gives for them. Diagrams are original artwork by the Stellar Scripts team. Narration audio was generated with ElevenLabs.</p>
+    <p class="note"><a href="/">← Back to the book</a></p>
+    <h2>Images and video</h2>
+    <div class="grid" id="images"></div>
+    <h2>Sources by device</h2>
+    <div id="sources"></div>
+  </main>
+  <script src="js/book-data.js"></script>
+  <script>
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+    fetch('assets/credits.json').then(r => r.json()).then(list => {
+      document.getElementById('images').innerHTML = list.filter(c => c.status === 'in repo').map(c => {
+        const src = 'assets/photos/' + c.file;
+        const media = /\.mp4$/.test(c.file) ? `<video src="${src}" muted loop playsinline controls preload="metadata"></video>` : `<img src="${src}" alt="${esc(c.shows)}" loading="lazy">`;
+        return `<figure>${media}<figcaption>${esc(c.shows)}<span class="credit">Credit: ${esc(c.credit)} · ${esc(c.source)}</span></figcaption></figure>`;
+      }).join('');
+    });
+    const B = window.SS_BOOK;
+    document.getElementById('sources').innerHTML = B.chapters.flatMap(ch => ch.devices).map(id => {
+      const d = B.devices[id];
+      return `<h3>${esc(d.name)}</h3><ul>${d.sources.map(([label, url]) => `<li><a href="${url}" target="_blank" rel="noopener">${esc(label)}</a></li>`).join('')}</ul>`;
+    }).join('');
+  </script>
+</body>
+</html>

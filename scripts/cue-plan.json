@@ -1,0 +1,468 @@
+{
+  "spirit": {
+    "pages": [
+      {
+        "id": "spirit-p1",
+        "first": "Picture a robot"
+      },
+      {
+        "id": "spirit-p2",
+        "first": "This is Spirit"
+      },
+      {
+        "id": "spirit-p3",
+        "first": "Spirit was built"
+      },
+      {
+        "id": "spirit-p4",
+        "first": "Then, in 2007"
+      },
+      {
+        "id": "spirit-p5",
+        "first": "In 2009, Spirit"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "dragging",
+        "action": "drag"
+      },
+      {
+        "at": "twenty-eight",
+        "action": "bounces"
+      },
+      {
+        "at": "other side",
+        "action": "twin"
+      },
+      {
+        "at": "twenty-five times",
+        "action": "longer"
+      },
+      {
+        "at": "sixty",
+        "action": "power"
+      },
+      {
+        "at": "dug up",
+        "action": "dig"
+      },
+      {
+        "at": "nearly pure silica",
+        "action": "silica"
+      },
+      {
+        "at": "hot springs",
+        "action": "springs"
+      },
+      {
+        "at": "2009",
+        "action": "t-stuck"
+      },
+      {
+        "at": "March 2010",
+        "action": "t-silent"
+      },
+      {
+        "at": "thirteen hundred",
+        "action": "t-commands"
+      },
+      {
+        "at": "May 2011",
+        "action": "t-ended"
+      },
+      {
+        "at": "A machine with",
+        "action": "legacy",
+        "page": "spirit-p5"
+      }
+    ]
+  },
+  "opportunity": {
+    "pages": [
+      {
+        "id": "opportunity-p1",
+        "first": "Picture crossing"
+      },
+      {
+        "id": "opportunity-p2",
+        "first": "Opportunity was a solar"
+      },
+      {
+        "id": "opportunity-p3",
+        "first": "Along the way"
+      },
+      {
+        "id": "opportunity-p4",
+        "first": "Near its own"
+      },
+      {
+        "id": "opportunity-p5",
+        "first": "In June 2018"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "March 2015",
+        "action": "finish"
+      },
+      {
+        "at": "marathon distance",
+        "action": "marathon"
+      },
+      {
+        "at": "eleven hundred yards",
+        "action": "planned"
+      },
+      {
+        "at": "fourteen years",
+        "action": "actual"
+      },
+      {
+        "at": "hematite",
+        "action": "hematite"
+      },
+      {
+        "at": "forms in water",
+        "action": "water"
+      },
+      {
+        "at": "meteorite",
+        "action": "meteorite"
+      },
+      {
+        "at": "Endeavour Crater",
+        "action": "endeavour"
+      },
+      {
+        "at": "neutral water",
+        "action": "neutral"
+      },
+      {
+        "at": "dust storm",
+        "action": "storm"
+      },
+      {
+        "at": "more than a thousand",
+        "action": "calls"
+      },
+      {
+        "at": "twenty-eight miles",
+        "action": "odometer"
+      },
+      {
+        "at": "Built for ninety",
+        "action": "legacy",
+        "page": "opportunity-p5"
+      }
+    ]
+  },
+  "pioneer-10": {
+    "pages": [
+      {
+        "id": "pioneer-10-p1",
+        "first": "In 1972, nobody"
+      },
+      {
+        "id": "pioneer-10-p2",
+        "first": "Pioneer 10 was"
+      },
+      {
+        "id": "pioneer-10-p3",
+        "first": "In December 1973"
+      },
+      {
+        "id": "pioneer-10-p4",
+        "first": "It was designed"
+      },
+      {
+        "id": "pioneer-10-p5",
+        "first": "On board is"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "first to try",
+        "action": "cross"
+      },
+      {
+        "at": "nuclear power",
+        "action": "nuclear"
+      },
+      {
+        "at": "far fewer impacts",
+        "action": "impacts"
+      },
+      {
+        "at": "ninety-two minutes",
+        "action": "delay"
+      },
+      {
+        "at": "false commands",
+        "action": "radiation"
+      },
+      {
+        "at": "five hundred images",
+        "action": "images"
+      },
+      {
+        "at": "Ganymede",
+        "action": "ganymede"
+      },
+      {
+        "at": "twenty-one months",
+        "action": "planned"
+      },
+      {
+        "at": "thirty-one years",
+        "action": "actual"
+      },
+      {
+        "at": "Aldebaran",
+        "action": "aldebaran"
+      },
+      {
+        "at": "a man",
+        "action": "people"
+      },
+      {
+        "at": "the solar system",
+        "action": "solar"
+      },
+      {
+        "at": "fourteen pulsars",
+        "action": "pulsars"
+      },
+      {
+        "at": "A message for",
+        "action": "legacy",
+        "page": "pioneer-10-p5"
+      }
+    ]
+  },
+  "pioneer-11": {
+    "pages": [
+      {
+        "id": "pioneer-11-p1",
+        "first": "On September 1"
+      },
+      {
+        "id": "pioneer-11-p2",
+        "first": "That was Pioneer 11"
+      },
+      {
+        "id": "pioneer-11-p3",
+        "first": "At Saturn"
+      },
+      {
+        "id": "pioneer-11-p4",
+        "first": "Contact with Pioneer 11"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "first ever",
+        "action": "first"
+      },
+      {
+        "at": "fly past Jupiter",
+        "action": "jupiter"
+      },
+      {
+        "at": "swing across",
+        "action": "swing"
+      },
+      {
+        "at": "three times closer",
+        "action": "closer"
+      },
+      {
+        "at": "F ring",
+        "action": "fring"
+      },
+      {
+        "at": "new moon",
+        "action": "moon"
+      },
+      {
+        "at": "magnetic field",
+        "action": "magnetic"
+      },
+      {
+        "at": "opposite direction",
+        "action": "opposite"
+      },
+      {
+        "at": "Lambda Aquilae",
+        "action": "lambda"
+      },
+      {
+        "at": "ghost ship",
+        "action": "ghost"
+      },
+      {
+        "at": "Before it fell",
+        "action": "legacy",
+        "page": "pioneer-11-p4"
+      }
+    ]
+  },
+  "ingenuity": {
+    "pages": [
+      {
+        "id": "ingenuity-p1",
+        "first": "It weighed"
+      },
+      {
+        "id": "ingenuity-p2",
+        "first": "Ingenuity was a helicopter"
+      },
+      {
+        "id": "ingenuity-p3",
+        "first": "That first flight"
+      },
+      {
+        "id": "ingenuity-p4",
+        "first": "Then it kept flying"
+      },
+      {
+        "id": "ingenuity-p5",
+        "first": "On its last flight"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "Wright Flyer",
+        "action": "flyer"
+      },
+      {
+        "at": "ten feet",
+        "action": "tenfeet"
+      },
+      {
+        "at": "less than one percent",
+        "action": "density"
+      },
+      {
+        "at": "five flights",
+        "action": "plan"
+      },
+      {
+        "at": "thirty-nine seconds",
+        "action": "seconds"
+      },
+      {
+        "at": "first freezing night",
+        "action": "night"
+      },
+      {
+        "at": "minus one hundred thirty",
+        "action": "cold"
+      },
+      {
+        "at": "Seventy-two flights",
+        "action": "flights"
+      },
+      {
+        "at": "parachute",
+        "action": "parachute"
+      },
+      {
+        "at": "rotor was damaged",
+        "action": "damage"
+      },
+      {
+        "at": "upright",
+        "action": "upright"
+      },
+      {
+        "at": "A test meant",
+        "action": "legacy",
+        "page": "ingenuity-p5"
+      }
+    ]
+  },
+  "surveyor-3": {
+    "pages": [
+      {
+        "id": "surveyor-3-p1",
+        "first": "In 1969, two"
+      },
+      {
+        "id": "surveyor-3-p2",
+        "first": "That robot was"
+      },
+      {
+        "id": "surveyor-3-p3",
+        "first": "Then it got to work"
+      },
+      {
+        "id": "surveyor-3-p4",
+        "first": "Surveyor 3 ran on sunlight"
+      },
+      {
+        "id": "surveyor-3-p5",
+        "first": "In 1969, Apollo 12"
+      }
+    ],
+    "triggers": [
+      {
+        "at": "two and a half years",
+        "action": "years"
+      },
+      {
+        "at": "confused",
+        "action": "radar"
+      },
+      {
+        "at": "kept firing",
+        "action": "firing"
+      },
+      {
+        "at": "bounced twice",
+        "action": "bounces"
+      },
+      {
+        "at": "scoop dug",
+        "action": "scoop"
+      },
+      {
+        "at": "6,326",
+        "action": "pictures"
+      },
+      {
+        "at": "wet sand",
+        "action": "sand"
+      },
+      {
+        "at": "ten pounds",
+        "action": "strength"
+      },
+      {
+        "at": "long lunar night",
+        "action": "night"
+      },
+      {
+        "at": "May 4",
+        "action": "lastcontact"
+      },
+      {
+        "at": "Apollo 12 landed",
+        "action": "apollo"
+      },
+      {
+        "at": "walked over",
+        "action": "walk"
+      },
+      {
+        "at": "removed",
+        "action": "removed"
+      },
+      {
+        "at": "A robot that",
+        "action": "legacy",
+        "page": "surveyor-3-p5"
+      }
+    ]
+  }
+}
