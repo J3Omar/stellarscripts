@@ -372,6 +372,67 @@ window.SS_DIAGRAMS = (() => {
         <text class="d-label d-accent" x="24" y="188">✓ still in contact</text>
         <text class="d-small" x="24" y="208">can no longer fly</text>
       </g>`),
+
+    // ---------- Surveyor 3 ----------
+    'sv-landing': () => {
+      const g = 226, hx = 70, hy = g - 70;
+      const lander = (x, y) => `<g transform="translate(${x} ${y})"><path class="d-line d-soft" d="M-12 -22H12L8 -8H-8Z"/><path class="d-line" d="M-8 -8L-18 0M8 -8L18 0M0 -8V0M-22 0H-14M14 0H22"/></g>`;
+      return wrap('0 0 400 280', 'Schematic: Surveyor 3\'s descent. Reflective rocks confused its radar, its engine kept firing, and it bounced twice before settling', `
+      <path class="d-line" d="M10 ${g}H390"/>
+      ${[[46, g], [72, g], [98, g]].map(([x, y]) => `<path class="d-line d-soft" d="M${x - 9} ${y}L${x - 4} ${y - 9}L${x + 6} ${y - 8}L${x + 10} ${y}Z"/>`).join('')}
+      <path class="d-faint" stroke-dasharray="4 5" d="M30 16C46 60 60 100 ${hx} ${hy - 24}"/>
+      ${lander(hx, hy)}
+      <g data-at="radar">
+        <path class="d-accent-stroke" stroke-dasharray="2 4" d="M${hx - 4} ${hy + 2}L48 ${g - 12}M${hx + 4} ${hy + 2}L96 ${g - 12}"/>
+        <path class="d-warm-stroke" d="M40 ${g - 14}l-5-6M72 ${g - 13}V${g - 21}M104 ${g - 14}l5-6"/>
+        <text class="d-small" x="72" y="${g + 22}" text-anchor="middle">radar confused by</text>
+        <text class="d-small" x="72" y="${g + 36}" text-anchor="middle">reflective rocks</text>
+      </g>
+      <g data-at="firing">
+        <path class="d-warm-stroke" d="M${hx - 5} ${hy + 2}L${hx} ${hy + 22}L${hx + 5} ${hy + 2}"/>
+        <path class="d-faint" d="M${hx + 8} ${hy + 14}L130 ${hy - 40}"/>
+        <text class="d-small d-warm" x="134" y="${hy - 44}">engine kept firing</text>
+      </g>
+      <g data-at="bounces">
+        <path class="d-accent-stroke d-draw" data-at="bounces" pathLength="1" d="M${hx} ${g}Q160 ${g - 150} 250 ${g}Q294 ${g - 46} 338 ${g}"/>
+        <text class="d-label d-accent" x="160" y="${g - 84}" text-anchor="middle">~33 ft</text>
+        <text class="d-label d-accent" x="294" y="${g - 32}" text-anchor="middle">~10 ft</text>
+        ${lander(360, g)}
+        <text class="d-small" x="360" y="${g + 22}" text-anchor="middle">settled</text>
+      </g>`);
+    },
+
+    'sv-scoop': () => wrap('0 0 400 280', 'Cross-section: Surveyor 3\'s scoop digging a trench; the soil was like wet sand and could bear about 10 pounds per square inch', `
+      <path class="d-soil" d="M10 150H390V270H10Z"/>
+      <path class="d-faint" d="M10 196H390M10 236H390" stroke-dasharray="2 6"/>
+      <g transform="translate(70 150)"><path class="d-line d-soft" d="M-26 -50H26L18 -26H-18Z"/><path class="d-line" d="M-18 -26L-34 0M18 -26L34 0M-40 0H-28M28 0H40"/></g>
+      <path class="d-line d-thick" d="M90 116L170 96L222 136"/>
+      <path class="d-trench d-wipe" data-at="scoop" d="M190 150H300V150C290 172 210 172 200 150Z"/>
+      <path class="d-line d-soft" data-at="scoop" d="M214 132l18 4-4 18-16-6Z"/>
+      <path class="d-line" d="M10 150H190M300 150H390"/>
+      <g data-at="sand"><path class="d-faint" d="M250 168L300 210"/><text class="d-label" x="304" y="222">like wet sand</text></g>
+      <g data-at="strength">
+        <path class="d-accent-stroke" d="M346 96V140M338 130l8 10 8-10"/>
+        <text class="d-label d-accent" x="346" y="70" text-anchor="middle">~10 psi</text>
+        <text class="d-small" x="346" y="86" text-anchor="middle">it could bear</text>
+      </g>
+      <g data-at="pictures">
+        <text class="d-big" x="24" y="50" style="font-size:34px" data-count="pictures" data-to="6326" data-dur="1.8" data-fmt="comma">6,326</text>
+        <text class="d-small" x="26" y="68">pictures sent home</text>
+      </g>`),
+
+    'sv-night': () => wrap('0 0 400 280', 'Diagram: the Sun sets on Surveyor 3, its solar power stops, and its last contact with Earth comes on May 4, 1967', `
+      <defs><clipPath id="svSky"><rect x="0" y="0" width="400" height="200"/></clipPath></defs>
+      <g class="d-stars" data-at="night">${[[40, 30], [90, 60], [150, 24], [210, 50], [300, 30], [350, 70], [260, 90], [120, 100]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.6"/>`).join('')}</g>
+      <g clip-path="url(#svSky)"><circle class="d-sun d-sunset" data-at="night" cx="310" cy="190" r="26"/></g>
+      <path class="d-line" d="M10 200H390"/>
+      <g transform="translate(130 200)">
+        <path class="d-line d-soft" d="M-22 -40H22L16 -16H-16Z"/><path class="d-line" d="M-16 -16L-32 0M16 -16L32 0M0 -40V-70"/>
+        <rect class="d-panel" x="-6" y="-92" width="44" height="22" transform="rotate(-20 0 -70)"/>
+        <rect class="d-panel-dark" data-at="night" x="-6" y="-92" width="44" height="22" transform="rotate(-20 0 -70)"/>
+      </g>
+      <g data-at="night"><text class="d-label" x="310" y="238" text-anchor="middle">the long lunar night begins</text></g>
+      <g data-at="lastcontact"><text class="d-label d-warm" x="130" y="238" text-anchor="middle">last contact</text><text class="d-label d-warm" x="130" y="256" text-anchor="middle">May 4, 1967</text></g>`),
   };
 
   return { render: id => (D[id] ? D[id]() : ''), has: id => !!D[id] };
