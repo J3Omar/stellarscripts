@@ -108,6 +108,9 @@
 .bk-svg .d-field path { fill: none; stroke: #3f7a76; stroke-width: 1.2; stroke-dasharray: 3 4; }
 .bk-svg .d-star { fill: #e9b54a; stroke: #7a4a22; stroke-width: 1; }
 .bk-svg .d-ghost { opacity: .55; }
+.bk-svg .d-air { fill: #3f7a76; }
+.bk-svg .d-plan-cell { fill: none; stroke: #a24b22; stroke-width: 2.4; }
+.bk-svg .d-flight-cell { fill: #3f7a76; opacity: .85; }
 .bk-svg .d-node-dot { fill: #3f7a76; stroke: #2e2014; stroke-width: 1.2; transition: fill .5s; }
 .bk-svg text { font-family: Montserrat, sans-serif; paint-order: stroke; stroke: rgba(241,230,204,.92); stroke-width: 4px; stroke-linejoin: round; }
 .bk-svg .d-label { font-size: 13px; font-weight: 600; fill: #3b2a1a; }

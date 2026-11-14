@@ -302,6 +302,76 @@ window.SS_DIAGRAMS = (() => {
       <g data-at="opposite"><path class="d-accent-stroke" stroke-dasharray="3 6" d="M214 140H360"/><path class="d-accent-stroke" d="M352 133l10 7-10 7"/></g>
       <g data-at="lambda"><text class="d-label d-accent" x="360" y="104" text-anchor="end">Pioneer 11 → Lambda Aquilae</text><text class="d-small" x="360" y="120" text-anchor="end">about four million years away</text></g>
       <g data-at="ghost" class="d-ghost"><circle class="d-line d-soft" cx="316" cy="196" r="8"/><path class="d-line" d="M316 188V170M306 170H326"/><text class="d-small" x="316" y="236" text-anchor="middle" font-style="italic">"a ghost ship in our galaxy"</text></g>`),
+
+    // ---------- Ingenuity ----------
+    'ing-height': () => {
+      const heli = `<g transform="translate(250 92)">
+        <path class="d-line" d="M-46 -30H46M-40 -22H40"/><path class="d-line" d="M0 -34V-6"/>
+        <rect class="d-line d-soft" x="-14" y="-6" width="28" height="20" rx="3"/>
+        <path class="d-line" d="M-10 14L-26 40M10 14L26 40M-4 14L-12 40M4 14L12 40"/>
+      </g>`;
+      return wrap('0 0 400 270', 'Diagram: Ingenuity rising 10 feet above the ground on its first flight', `
+      <path class="d-line" d="M20 220H380"/>
+      ${heli}
+      <g data-at="tenfeet">
+        <path class="d-accent-stroke" d="M120 220V132M110 132H130M110 220H130"/>
+        <text class="d-big d-accent" x="96" y="186" text-anchor="end" style="font-size:36px">10 ft</text>
+      </g>
+      <text class="d-small" x="250" y="252" text-anchor="middle">ground</text>`);
+    },
+
+    'ing-air': () => {
+      let dense = '';
+      for (let i = 0; i < 120; i++) dense += `<circle class="d-air" cx="${(40 + (i % 12) * 11 + (Math.floor(i / 12) % 2) * 5).toFixed(0)}" cy="${(52 + Math.floor(i / 12) * 13).toFixed(0)}" r="2.2"/>`;
+      return wrap('0 0 400 280', 'Diagram: Mars air is less than one percent as dense as Earth\'s air', `
+      <rect class="d-line d-soft" x="30" y="40" width="140" height="140" rx="4"/>
+      ${dense}
+      <text class="d-label" x="100" y="204" text-anchor="middle">Earth's air</text>
+      <g data-at="density">
+        <rect class="d-line d-soft" x="230" y="40" width="140" height="140" rx="4"/>
+        <circle class="d-air" cx="300" cy="110" r="2.2"/>
+        <text class="d-label d-warm" x="300" y="204" text-anchor="middle">Mars's air</text>
+        <text class="d-small" x="300" y="222" text-anchor="middle">less than 1% as dense</text>
+      </g>
+      <g data-at="plan">
+        <text class="d-small" x="30" y="256">test plan: up to 5 flights in 30 days</text>
+        ${[0, 1, 2, 3, 4].map(i => `<circle class="d-accent-stroke" cx="${284 + i * 20}" cy="252" r="7"/>`).join('')}
+      </g>
+      <text class="d-small" x="200" y="20" text-anchor="middle">same box of air, dots = air molecules (illustration)</text>`);
+    },
+
+    'ing-flights': () => {
+      let cells = '';
+      for (let i = 0; i < 72; i++) {
+        const x = 30 + (i % 12) * 29, y = 40 + Math.floor(i / 12) * 29;
+        cells += i < 5
+          ? `<rect class="d-plan-cell" x="${x}" y="${y}" width="22" height="22" rx="4"/>`
+          : `<rect class="d-flight-cell" data-at="flights" x="${x}" y="${y}" width="22" height="22" rx="4" style="transition-delay:${(i * 0.018).toFixed(2)}s"/>`;
+      }
+      return wrap('0 0 400 280', 'Diagram: 5 flights planned, 72 flights flown', `
+      ${cells}
+      <text class="d-small" x="30" y="30">first 5 squares = the planned test</text>
+      <text class="d-big d-accent" x="30" y="262" style="font-size:36px" data-count="flights" data-from="5" data-to="72" data-dur="1.6">72</text>
+      <text class="d-label" x="88" y="256">flights flown</text>
+      <g data-at="parachute"><text class="d-small d-warm" x="370" y="256" text-anchor="end">flight 26: photographed the</text><text class="d-small d-warm" x="370" y="270" text-anchor="end">parachute that landed Perseverance</text></g>`);
+    },
+
+    'ing-damage': () => wrap('0 0 400 280', 'Schematic: Ingenuity after its last flight, a rotor blade damaged, but upright and still in contact', `
+      <path class="d-line" d="M20 228H380"/>
+      <g transform="translate(200 150)">
+        <rect class="d-line d-soft" x="-40" y="-104" width="80" height="12" rx="2"/>
+        <path class="d-line" d="M0 -92V-6"/>
+        <path class="d-line d-thick" d="M-120 -66H120"/>
+        <path class="d-line d-thick" d="M-120 -40H70"/>
+        <g data-at="damage"><path class="d-warm-stroke d-thick" d="M70 -40H104"/><path class="d-warm-stroke" d="M96 -50l8 10-10 6 8 10"/><text class="d-label d-warm" x="150" y="-14" text-anchor="middle">damaged</text><text class="d-label d-warm" x="150" y="2" text-anchor="middle">rotor blade</text></g>
+        <rect class="d-line d-soft" x="-26" y="-6" width="52" height="38" rx="5"/>
+        <path class="d-line" d="M-20 32L-52 78M20 32L52 78M-8 32L-20 78M8 32L20 78"/>
+      </g>
+      <g data-at="upright">
+        <text class="d-label d-accent" x="24" y="166">✓ upright</text>
+        <text class="d-label d-accent" x="24" y="188">✓ still in contact</text>
+        <text class="d-small" x="24" y="208">can no longer fly</text>
+      </g>`),
   };
 
   return { render: id => (D[id] ? D[id]() : ''), has: id => !!D[id] };
