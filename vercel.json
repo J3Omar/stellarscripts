@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node scripts/build-static.mjs",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/chat.mjs": {
+      "includeFiles": "server/{archive-instructions.txt,chapters/*.md}"
+    }
+  }
+}
