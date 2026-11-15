@@ -71,8 +71,9 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
       const kk = 1 - Math.exp(-dt * 3.2); this.mx += (this.tmx - this.mx) * kk; this.my += (this.tmy - this.my) * kk; this.dtf = dt * 60;
       const S = this.state, G = window.SSGFX, scr = S.screen;
       if (scr === 'intro') {
-        this.introT += dt; const it = this.introT;
-        const ist = it < 13.5 ? 0 : it < 14.8 ? 7 : 8;
+        this.introT += dt;
+        const it = this.introT;
+        const ist = [0.7, 4, 4.7, 8, 8.7, 12.2, 13.5, 14.8].filter(time => it >= time).length;
         if (ist !== S.ist) this.setState({ ist });
       }
       this.syncTick();
@@ -429,6 +430,10 @@ window.createStellarScriptsComponent = (DCLogic, React) => {
         grain: P.grain ?? .45, veilOp: S.veil ? 1 : 0,
         isIntro: scr === 'intro',
         titleOp: S.ist >= 7 ? 1 : 0, titleBl: S.ist >= 7 ? 'blur(0)' : 'blur(10px)', titleLs: S.ist >= 7 ? '.04em' : '.4em',
+        introStory: S.ist <= 2 ? 'We sent our curiosity into the unknown.' : S.ist <= 4 ? 'Across distant worlds, our machines became witnesses.' : 'Their missions became history. Their stories live here.',
+        introStoryOp: [1, 3, 5].includes(S.ist) ? 1 : 0,
+        introHeadingVisibility: S.ist >= 7 ? 'visible' : 'hidden',
+        introEnterVisibility: S.ist >= 8 ? 'visible' : 'hidden',
         enterOp: S.ist >= 8 ? 1 : 0, enterPe: S.ist >= 8 ? 'auto' : 'none',
         enterShelf: () => this.enterShelf(), skipIntro: () => this.enterShelf(),
         showShelf: scr === 'shelf' || scr === 'opening', stageScale: Math.max(S.vw / 1920, S.vh / 1080),

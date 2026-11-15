@@ -24,12 +24,15 @@
       <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
         <div class="intro-scene">
           <canvas class="intro-canvas" ref="{{ cv.intro }}" data-scene="intro" data-w="1600" data-h="900"></canvas>
-          <div class="intro-heading" style="--ss-opacity:{{ titleOp }}; --ss-filter:{{ titleBl }}">
-            <div class="intro-title" style="--ss-letter-spacing:{{ titleLs }}">Stellar Scripts</div>
+          <div class="intro-scrim" aria-hidden="true"></div>
+          <p class="intro-story" aria-hidden="true" style="--ss-opacity:{{ introStoryOp }}">{{ introStory }}</p>
+          <div class="intro-heading" style="--ss-opacity:{{ titleOp }}; --ss-filter:{{ titleBl }}; visibility:{{ introHeadingVisibility }}">
+            <h1 class="intro-title" style="--ss-letter-spacing:{{ titleLs }}">Stellar Scripts</h1>
             <div class="intro-subtitle">THE MISSION ARCHIVE · NASA SPACE APPS 2026</div>
-          </div>
-          <div class="intro-actions" style="--ss-opacity:{{ enterOp }}; --ss-pointer-events:{{ enterPe }}">
-            <button class="intro-enter" onClick="{{ enterShelf }}"><span class="pulse-dot"></span>ENTER THE STUDY</button>
+            <p class="intro-description">An illustrated, narrated archive of NASA missions. Discover what they explored, what they taught us, and what they left behind.</p>
+            <div class="intro-actions" style="--ss-opacity:{{ enterOp }}; --ss-pointer-events:{{ enterPe }}; visibility:{{ introEnterVisibility }}">
+              <button class="intro-enter" onClick="{{ enterShelf }}"><span class="pulse-dot"></span>ENTER THE STUDY</button>
+            </div>
           </div>
           <button class="intro-skip" onClick="{{ skipIntro }}">SKIP INTRO ›</button>
         </div>
